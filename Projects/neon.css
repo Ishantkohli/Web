@@ -1,0 +1,123 @@
+  * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at top, #1a1a2e 0%, #050810 40%, #000000 100%);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #fff;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-shadow:
+        0 0 7px #00f7ff,
+        0 0 14px #00f7ff,
+        0 0 28px #00f7ff;
+    }
+
+    p {
+      margin-bottom: 25px;
+      opacity: 0.8;
+      font-size: 0.9rem;
+    }
+
+    /* Grid for buttons */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 18px;
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    /* Neon button base */
+    .neon-btn {
+      position: relative;
+      display: inline-block;
+      padding: 14px 26px;
+      border-radius: 999px;
+      border: 2px solid #e41111;
+      color: #00f7ff;
+      background: transparent;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+      box-shadow:
+        0 0 5px rgba(0, 247, 255, 0.6),
+        0 0 15px rgba(0, 247, 255, 0.4),
+        inset 0 0 5px rgba(0, 247, 255, 0.4);
+    }
+
+    /* Extra glow using pseudo-element */
+    .neon-btn::before {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: inherit;
+      background: radial-gradient(circle, rgb(255, 0, 0), transparent 70%);
+      opacity: 0;
+      z-index: -1;
+      transition: opacity 0.2s ease;
+      filter: blur(6px);
+    }
+
+    /* Hover / focus state */
+    .neon-btn:hover,
+    .neon-btn:focus-visible {
+      background: #00f7ff;
+      color: #050810;
+      box-shadow:
+        0 0 10px #00f7ff,
+        0 0 25px #00f7ff,
+        0 0 45px #00f7ff;
+      transform: translateY(-2px);
+    }
+
+    .neon-btn:hover::before,
+    .neon-btn:focus-visible::before {
+      opacity: 1;
+    }
+
+    /* Small glow animation (optional) */
+    @keyframes pulseGlow {
+      0% {
+        box-shadow:
+          0 0 6px rgba(0, 247, 255, 0.7),
+          0 0 18px rgba(0, 247, 255, 0.4);
+      }
+      50% {
+        box-shadow:
+          0 0 10px rgba(0, 247, 255, 1),
+          0 0 28px rgba(0, 247, 255, 0.9);
+      }
+      100% {
+        box-shadow:
+          0 0 6px rgba(0, 247, 255, 0.7),
+          0 0 18px rgba(0, 247, 255, 0.4);
+      }
+    }
+
+    .neon-btn {
+      animation: pulseGlow 2s infinite alternate;
+    }
