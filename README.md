@@ -1,2 +1,2 @@
 Live Page
-https://ishantkohli.me/Website
+https://ishantkohli.me/Web
