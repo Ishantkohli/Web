@@ -64,9 +64,29 @@ body{
   color:var(--text);
   font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
   line-height:1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-img{max-width:100%; display:block}
+/* GPU Hardware Acceleration & Smooth 60-120 FPS Performance */
+#bg3d,
+[data-tilt],
+.cyber-panel-3d,
+.btn-3d,
+.site-header,
+.bento-card,
+.welcome-card {
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform-style: preserve-3d;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+  content-visibility: auto;
+}
 .container {
   max-width: 100% !important;
   margin-inline: auto;

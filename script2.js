@@ -237,12 +237,23 @@ document.addEventListener("DOMContentLoaded", () => {
   const canvas = document.getElementById("bg3d");
   if (!canvas || typeof THREE === "undefined") return;
 
+  const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+  
+  // Hardware-accelerated WebGL renderer with power preference and mediump precision for mobile GPUs
+  const renderer = new THREE.WebGLRenderer({
+    canvas: canvas,
+    alpha: true,
+    antialias: !isMobile, // Enable MSAA antialiasing on desktop, performance optimization on mobile
+    powerPreference: "high-performance",
+    precision: isMobile ? "mediump" : "highp"
+  });
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const maxDPR = isMobile ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2);
+  renderer.setPixelRatio(maxDPR);
 
   // 1. Diverse 3D Geometries Array
   const shapesGroup = new THREE.Group();
@@ -257,18 +268,18 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   const geometries = [
-    new THREE.TorusKnotGeometry(1.3, 0.35, 100, 16),
+    new THREE.TorusKnotGeometry(1.3, 0.35, isMobile ? 40 : 80, 12),
     new THREE.IcosahedronGeometry(1.6, 1),
     new THREE.DodecahedronGeometry(1.5, 0),
     new THREE.OctahedronGeometry(1.4, 0),
     new THREE.TetrahedronGeometry(1.5, 0),
-    new THREE.TorusGeometry(1.8, 0.25, 16, 100),
-    new THREE.SphereGeometry(1.4, 16, 16),
-    new THREE.CylinderGeometry(0.8, 1.4, 2.2, 12),
+    new THREE.TorusGeometry(1.8, 0.25, 12, isMobile ? 40 : 80),
+    new THREE.SphereGeometry(1.4, 12, 12),
+    new THREE.CylinderGeometry(0.8, 1.4, 2.2, 10),
     new THREE.ConeGeometry(1.2, 2.2, 8)
   ];
 
-  const meshCount = 32; // Expanded object count along scroll path
+  const meshCount = isMobile ? 18 : 32; // Optimized count for 120 FPS frame pacing on mobile
   const meshes = [];
 
   for (let i = 0; i < meshCount; i++) {
@@ -276,9 +287,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const mat = materials[i % materials.length];
     const mesh = new THREE.Mesh(geom, mat);
 
-    // Spread shapes across wider Y (vertical scroll) and Z (depth) coordinates
     mesh.position.x = (Math.random() - 0.5) * 28;
-    mesh.position.y = (Math.random() - 0.5) * 65; // Spreads across scroll travel height
+    mesh.position.y = (Math.random() - 0.5) * 65;
     mesh.position.z = (Math.random() - 0.5) * 35 - 8;
 
     mesh.rotation.x = Math.random() * Math.PI;
@@ -299,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 2. Dynamic 3D Particle Starfield
-  const particleCount = 2000;
+  const particleCount = isMobile ? 1000 : 2000;
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
 
@@ -324,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
   particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
   const particleMat = new THREE.PointsMaterial({
-    size: 0.09,
+    size: isMobile ? 0.12 : 0.09,
     vertexColors: true,
     transparent: true,
     opacity: 0.8
@@ -340,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const mouseX = (e.clientX / window.innerWidth - 0.5) * 20;
     const mouseY = -(e.clientY / window.innerHeight - 0.5) * 15;
 
-    const waveGeom = new THREE.RingGeometry(0.1, 0.2, 32);
+    const waveGeom = new THREE.RingGeometry(0.1, 0.2, 24);
     const waveMat = new THREE.MeshBasicMaterial({
       color: Math.random() > 0.5 ? 0xff2a85 : 0x00e7ff,
       side: THREE.DoubleSide,
@@ -351,12 +361,12 @@ document.addEventListener("DOMContentLoaded", () => {
     wave.position.set(mouseX, mouseY - currentScrollY * 0.005, 0);
 
     scene.add(wave);
-    shockwaves.push({ mesh: wave, scale: 1, maxScale: 12 + Math.random() * 8 });
-  });
+    shockwaves.push({ mesh: wave, scale: 1, maxScale: 10 + Math.random() * 6 });
+  }, { passive: true });
 
   camera.position.z = 10;
 
-  // Smooth Non-Glitchy Scroll Tracker
+  // Passive Scroll & Mouse Event Listeners for 60-120 FPS
   let targetMouseX = 0;
   let targetMouseY = 0;
   let currentMouseX = 0;
@@ -369,14 +379,14 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("mousemove", (e) => {
     targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
     targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
-  });
+  }, { passive: true });
 
   window.addEventListener("scroll", () => {
     targetScrollY = window.scrollY;
     const deltaY = Math.abs(targetScrollY - lastScrollY);
     scrollSpeed = deltaY * 0.04;
     lastScrollY = targetScrollY;
-  });
+  }, { passive: true });
 
   // Render Loop
   let clock = new THREE.Clock();
@@ -389,27 +399,28 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollSpeed *= 0.92;
 
     // Smooth Lerp Mouse & Scroll
-    currentMouseX += (targetMouseX - currentMouseX) * 0.05;
-    currentMouseY += (targetMouseY - currentMouseY) * 0.05;
-    currentScrollY += (targetScrollY - currentScrollY) * 0.08;
+    currentMouseX += (targetMouseX - currentMouseX) * 0.06;
+    currentMouseY += (targetMouseY - currentMouseY) * 0.06;
+    currentScrollY += (targetScrollY - currentScrollY) * 0.09;
 
-    // Camera perspective traversal on scroll (no glitches, smooth translation)
-    camera.position.x = currentMouseX * 1.6;
-    camera.position.y = -currentScrollY * 0.008 + (-currentMouseY * 1.6);
+    // Camera perspective traversal
+    camera.position.x = currentMouseX * 1.5;
+    camera.position.y = -currentScrollY * 0.008 + (-currentMouseY * 1.5);
     camera.position.z = 10 + Math.sin(currentScrollY * 0.002) * 2 + scrollSpeed * 0.3;
     camera.lookAt(0, -currentScrollY * 0.008, 0);
 
-    // Smooth 3D Background Group Rotation on Scroll
+    // 3D Background Group Rotation
     shapesGroup.rotation.y = currentScrollY * 0.0015 + elapsedTime * 0.02;
     shapesGroup.rotation.x = currentScrollY * 0.0008 + elapsedTime * 0.01;
     shapesGroup.rotation.z = Math.sin(currentScrollY * 0.001) * 0.15;
 
     // Individual 3D mesh float & spin
-    meshes.forEach((mesh) => {
+    for (let i = 0; i < meshes.length; i++) {
+      const mesh = meshes[i];
       mesh.rotation.x += mesh.userData.rotX * (1 + scrollSpeed * 2);
       mesh.rotation.y += mesh.userData.rotY * (1 + scrollSpeed * 2);
       mesh.position.y = mesh.userData.initialY + Math.sin(elapsedTime * 2 + mesh.position.x) * 0.45;
-    });
+    }
 
     // Particle rotation
     particleSystem.rotation.y = currentScrollY * 0.001 + elapsedTime * 0.02 + scrollSpeed * 0.05;
@@ -435,42 +446,56 @@ document.addEventListener("DOMContentLoaded", () => {
 
   animate();
 
-  // Resize Handler
+  // Resize Handler with Debounce
+  let resizeTimeout;
   window.addEventListener("resize", () => {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  });
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }, 100);
+  }, { passive: true });
 })();
 
-// ================= INTERACTIVE 3D CARD TILT ENGINE =================
+// ================= INTERACTIVE 3D CARD TILT ENGINE (rAF OPTIMIZED) =================
 (function init3DTilt() {
   const tiltCards = document.querySelectorAll("[data-tilt]");
-  const maxTilt = 14; // Maximum angle in degrees
+  const maxTilt = 14;
 
   tiltCards.forEach((card) => {
+    let ticking = false;
+
     card.addEventListener("mousemove", (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
 
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
 
-      const rotateX = ((y - centerY) / centerY) * -maxTilt;
-      const rotateY = ((x - centerX) / centerX) * maxTilt;
+          const rotateX = ((y - centerY) / centerY) * -maxTilt;
+          const rotateY = ((x - centerX) / centerX) * maxTilt;
 
-      const glowX = (x / rect.width) * 100;
-      const glowY = (y / rect.height) * 100;
+          const glowX = (x / rect.width) * 100;
+          const glowY = (y / rect.height) * 100;
 
-      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(14px)`;
-      card.style.setProperty("--glow-x", `${glowX.toFixed(1)}%`);
-      card.style.setProperty("--glow-y", `${glowY.toFixed(1)}%`);
-    });
+          card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(14px)`;
+          card.style.setProperty("--glow-x", `${glowX.toFixed(1)}%`);
+          card.style.setProperty("--glow-y", `${glowY.toFixed(1)}%`);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
 
     card.addEventListener("mouseleave", () => {
-      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
-    });
+      requestAnimationFrame(() => {
+        card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
+      });
+    }, { passive: true });
   });
 })();
 
