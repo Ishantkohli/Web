@@ -4,20 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
+    <title>About - Ishant Kohli</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../style2.css">
     <link rel="stylesheet" href="about.css">
+    <!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
 
-    <div class="bento-grid">
+    <!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+    <canvas id="bg3d"></canvas>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
+
+            <div class="header-right">
+                <nav class="nav" id="primaryNav">
+                    <a href="../index.html"><span>Home</span></a>
+                    <a href="about.html" class="active"><span>About</span></a>
+                    <a href="../404 Page/404 Codes/index.html"><span>Skills</span></a>
+                    <a href="../Projects/projectpage.html"><span>Projects</span></a>
+                    <a href="../Timeline/timeline.html"><span>Journey</span></a>
+                    <a href="../Media/media.html"><span>Media</span></a>
+                    <a href="../Contact/contact.html"><span>Contact</span></a>
+                </nav>
+
+                <div class="nav-divider"></div>
+
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="menu-toggle" aria-controls="primaryNav" aria-expanded="false">
+                    <span>Menu</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="bento-grid" style="margin-top: 40px;">
 
         <!-- Code Editor Bio -->
-        <div class="bento-card card-code">
+        <div class="bento-card card-code cyber-panel-3d" data-tilt>
+            <div class="cyber-corner tl"></div>
+            <div class="cyber-corner tr"></div>
             <div class="editor-header">
                 <div class="mac-btns">
                     <div class="mac-btn red"></div>
@@ -38,7 +73,7 @@
                         Institute Of Professional Studies "</span>,</span>
                 <span class="line l6"> <span class="property">skills</span>: [<span class="string">"HTML"</span>, <span
                         class="string">"CSS"</span>, <span class="string">"JavaScript"</span>, <span
-                        class="string">"AI"</span>,</span>
+                        class="string">"AI"</span>],</span>
                 <span class="line l7"> <span class="property">isPassionate</span>: <span
                         class="boolean">true</span></span>
                 <span class="line l8">};<span class="cursor"></span></span>
@@ -46,14 +81,18 @@
         </div>
 
         <!-- Location -->
-        <div class="bento-card card-location">
-            <i class="fa-solid fa-location-dot icon"></i>
+        <div class="bento-card card-location cyber-panel-3d" data-tilt>
+            <div class="cyber-corner tl"></div>
+            <div class="cyber-corner br"></div>
+            <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" class="tech-img-icon" alt="Location Pin" style="margin: 0 auto 12px; display: block;">
             <h2>Dwarka, Delhi, India</h2>
             <p>Living & Building</p>
         </div>
 
         <!-- Current Status -->
-        <div class="bento-card card-status">
+        <div class="bento-card card-status cyber-panel-3d" data-tilt>
+            <div class="cyber-corner tl"></div>
+            <div class="cyber-corner tr"></div>
             <h2 style="font-size: 1.4rem; display: flex; align-items: center;">
                 <span class="status-dot"></span> Currently Pursuing
             </h2>
@@ -62,32 +101,33 @@
         </div>
 
         <!-- Tech Stack -->
-        <div class="bento-card card-stack">
-            <i class="fa-brands fa-html5 tech-icon" title="HTML5">HTML</i>
-            <i class="fa-brands fa-css3-alt tech-icon" title="CSS3">CSS</i>
-            <i class="fa-brands fa-js tech-icon" title="JavaScript">JS</i>
-            <i class="fa-solid fa-robot tech-icon" title="AI">AI</i>
-            <i class="fa-brands fa-php tech-icon" title="PHP"></i>
-
+        <div class="bento-card card-stack cyber-panel-3d" data-tilt>
+            <div class="cyber-corner bl"></div>
+            <div class="cyber-corner br"></div>
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" class="tech-img-icon" alt="HTML5" title="HTML5">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" class="tech-img-icon" alt="CSS3" title="CSS3">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" class="tech-img-icon" alt="JavaScript" title="JavaScript">
+            <img src="https://cdn-icons-png.flaticon.com/512/2103/2103633.png" class="tech-img-icon" alt="AI" title="Artificial Intelligence">
+            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" class="tech-img-icon" alt="PHP" title="PHP">
         </div>
 
         <!-- Social Links -->
-        <div class="bento-card card-socials">
+        <div class="bento-card card-socials cyber-panel-3d" data-tilt>
+            <div class="cyber-corner tr"></div>
+            <div class="cyber-corner bl"></div>
             <h2 style="margin-bottom: 1.5rem;">Let's Connect</h2>
             <div class="social-links">
                 <a href="https://www.linkedin.com/in/ishant-kohli-292485381?utm_source=share_via&utm_content=profile&utm_medium=member_android"
-                    class="social-btn"><i class="fa-brands fa-linkedin icon-linkedin"></i> LinkedIn</a>
-                <a href="https://github.com/Ishantkohli" class="social-btn"><i
-                        class="fa-brands fa-github icon-github"></i> GitHub</a>
-                <a href="https://unstop.com/u/ilzjxvwu3931" class="social-btn"><i
-                        class="fa-solid fa-briefcase icon-internshala"></i> UnStop</a>
-                <a href="https://me.developers.google.com/u/110139075232695583409" class="social-btn"><i
-                        class="fa-solid fa-user-tie icon-google-developer"></i> Google Developer</a>
+                    class="social-btn btn-3d"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" class="social-img-icon" alt="LinkedIn"> LinkedIn</a>
+                <a href="https://github.com/Ishantkohli" class="social-btn btn-3d"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" class="social-img-icon" alt="GitHub" style="filter: invert(1);"> GitHub</a>
+                <a href="https://unstop.com/u/ilzjxvwu3931" class="social-btn btn-3d"><img src="https://img.icons8.com/color/96/briefcase.png" class="social-img-icon" alt="UnStop"> UnStop</a>
+                <a href="https://me.developers.google.com/u/110139075232695583409" class="social-btn btn-3d"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" class="social-img-icon" alt="Google Developer"> Google Dev</a>
             </div>
         </div>
 
     </div>
 
+    <script defer src="../script2.js"></script>
 </body>
 
 </html>

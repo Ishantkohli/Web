@@ -2,49 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Contact Ishant</title>
+  <title>Contact Ishant Kohli</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../style2.css" />
   <link rel="stylesheet" href="contact.css" />
+  <!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-  <div class="page">
-    <div class="card">
+
+  <!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+  <canvas id="bg3d"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
+
+      <div class="header-right">
+        <nav class="nav" id="primaryNav">
+          <a href="../index.html"><span>Home</span></a>
+          <a href="../About/about.html"><span>About</span></a>
+          <a href="../404 Page/404 Codes/index.html"><span>Skills</span></a>
+          <a href="../Projects/projectpage.html"><span>Projects</span></a>
+          <a href="../Timeline/timeline.html"><span>Journey</span></a>
+          <a href="../Media/media.html"><span>Media</span></a>
+          <a href="contact.html" class="active"><span>Contact</span></a>
+        </nav>
+
+        <div class="nav-divider"></div>
+
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button class="menu-toggle" aria-controls="primaryNav" aria-expanded="false">
+          <span>Menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="page" style="margin-top: 40px;">
+    <div class="card cyber-panel-3d" data-tilt>
+      <div class="cyber-corner tl"></div>
+      <div class="cyber-corner tr"></div>
+      <div class="cyber-corner bl"></div>
+      <div class="cyber-corner br"></div>
       <h1>Get in touch</h1>
       <p>Reach out quickly via WhatsApp or send an email.</p>
 
       <div class="btn-group">
-  <!-- WhatsApp -->
-  <a
-    class="btn btn-whatsapp"
-    href="https://wa.me/919220037676"
-    target="_blank"
-    rel="noopener"
-  >
-    WhatsApp Me
-  </a>
+        <!-- WhatsApp -->
+        <a
+          class="btn btn-whatsapp btn-3d"
+          href="https://wa.me/919220037676"
+          target="_blank"
+          rel="noopener"
+        >
+          <img src="https://cdn-icons-png.flaticon.com/512/3670/3670051.png" class="social-img-icon" alt="WhatsApp"> WhatsApp Me
+        </a>
 
-  <!-- Email button: tries default mail app 
-      -->
-  <a
-    class="btn btn-email"
-    href="mailto:ishantkohlikohli@gmail.com?subject=Hello%20Ishant&body=Hi%20Ishant,"
-  >
-    Send Email (App)
-  </a>
-</div>
+        <!-- Email button -->
+        <a
+          class="btn btn-email btn-3d"
+          href="mailto:ishantkohlikohli@gmail.com?subject=Hello%20Ishant&body=Hi%20Ishant,"
+        >
+          <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" class="social-img-icon" alt="Email"> Send Email (App)
+        </a>
+      </div>
 
-<div class="btn-group" style="margin-top:10px;">
-  <!-- Gmail in browser (Chrome) -->
-  <a
-    class="btn btn-email"
-    href="https://mail.google.com/mail/?view=cm&fs=1&to=ishantkohlikohli@gmail.com&su=Hello%20Ishant&body=Hi%20Ishant,"
-    target="_blank"
-    rel="noopener"
-  >
-    Send Email (Gmail in Chrome)
-  </a>
-</div>
+      <div class="btn-group" style="margin-top:14px;">
+        <!-- Gmail in browser -->
+        <a
+          class="btn btn-email btn-3d"
+          href="https://mail.google.com/mail/?view=cm&fs=1&to=ishantkohlikohli@gmail.com&su=Hello%20Ishant&body=Hi%20Ishant,"
+          target="_blank"
+          rel="noopener"
+        >
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" class="social-img-icon" alt="Gmail"> Send Email (Gmail in Chrome)
+        </a>
+      </div>
+    </div>
+  </div>
 
   <script src="contact.js"></script>
+  <script defer src="../script2.js"></script>
 </body>
 </html>

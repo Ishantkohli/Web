@@ -12,11 +12,18 @@ body {
 }
 
 .wrapper {
-  height: 100vh;
+  min-height: calc(100vh - 80px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding: 100px 1.5rem 3rem;
+  box-sizing: border-box;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  position: relative;
+  z-index: 2;
 }
 
 .subtitle {

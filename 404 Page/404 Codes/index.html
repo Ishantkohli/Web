@@ -3,25 +3,60 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>404 Not Found</title>
-
+<title>404 Not Found - Ishant Kohli</title>
+<link rel="stylesheet" href="../../style2.css">
 <link rel="stylesheet" href="style.css">
 
+<!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <!-- GSAP CDN -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 
 <body>
 
-<div class="wrapper">
+<!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+<canvas id="bg3d"></canvas>
 
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="../../index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
+
+    <div class="header-right">
+      <nav class="nav" id="primaryNav">
+        <a href="../../index.html"><span>Home</span></a>
+        <a href="../../About/about.html"><span>About</span></a>
+        <a href="index.html" class="active"><span>Skills</span></a>
+        <a href="../../Projects/projectpage.html"><span>Projects</span></a>
+        <a href="../../Timeline/timeline.html"><span>Journey</span></a>
+        <a href="../../Media/media.html"><span>Media</span></a>
+        <a href="../../Contact/contact.html"><span>Contact</span></a>
+      </nav>
+
+      <div class="nav-divider"></div>
+
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+        <span class="theme-icon">🌙</span>
+      </button>
+      <button class="menu-toggle" aria-controls="primaryNav" aria-expanded="false">
+        <span>Menu</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrapper">
   <p class="subtitle">{ we can't find that page... Sorry 😞}</p>
-  <h1>Oops</h1>
+  <h1 class="brand-3d">Oops 404</h1>
 
   <div class="canvas" id="canvas"></div>
-
+  
+  <div style="margin-top: 25px; z-index: 10; position: relative;">
+    <a href="../../index.html" class="btn neon neon-pink btn-3d">Back to Home</a>
+  </div>
 </div>
 
 <script src="script.js"></script>
+<script defer src="../../script2.js"></script>
 </body>
 </html>

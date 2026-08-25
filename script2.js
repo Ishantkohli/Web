@@ -154,25 +154,323 @@ if (scrollTopBtn) {
   });
 }
 
-// ================= NEON COLOR CYCLE =================
+// ================= PINK MULTILINGUAL WELCOME SCREEN =================
+document.addEventListener("DOMContentLoaded", () => {
+  const welcomeScreen = document.getElementById("welcome-screen");
+  if (!welcomeScreen) return;
 
-// ================= LOADER CONTROL (NO AUDIO) =================
-window.addEventListener("load", () => {
+  document.body.classList.add("welcome-active");
 
-  const LOADER_DURATION = 2000; // 2 seconds
+  const languages = [
+    { name: "English", word: "Welcome", sub: "Ishant Kohli Site" },
+    { name: "Hindi • हिंदी", word: "स्वागत है", sub: "ईशांत कोहली साइट" },
+    { name: "Chinese • 中文", word: "欢迎", sub: "柯利 (Ishant Kohli) 网站" },
+    { name: "Korean • 한국어", word: "환영합니다", sub: "이샨트 코흘리 사이트" },
+    { name: "French • Français", word: "Bienvenue", sub: "Site de Ishant Kohli" },
+    { name: "German • Deutsch", word: "Willkommen", sub: "Ishant Kohli Website" },
+    { name: "Japanese • 日本語", word: "ようこそ", sub: "イシャント・コーリ サイト" },
+    { name: "Spanish • Español", word: "Bienvenido", sub: "Sitio de Ishant Kohli" },
+    { name: "Italian • Italiano", word: "Benvenuto", sub: "Sito di Ishant Kohli" },
+    { name: "Russian • Русский", word: "Добро пожаловать", sub: "Сайт Ишанта Кохли" }
+  ];
 
-  setTimeout(() => {
-    const loader = document.getElementById("page-loader");
-    if (!loader) return;
+  const wordEl = document.getElementById("welcome-word");
+  const subEl = document.getElementById("welcome-subtext");
+  const badgeEl = document.getElementById("welcome-lang-badge");
+  const progressEl = document.getElementById("welcome-progress");
 
-    loader.style.transition = "opacity .6s ease, transform .6s ease";
-    loader.style.opacity = "0";
-    loader.style.transform = "scale(1.05)";
+  let currentIndex = 0;
+  const total = languages.length;
+
+  const updateLanguage = (index) => {
+    if (wordEl && subEl) {
+      wordEl.classList.add("changing");
+      subEl.classList.add("changing");
+
+      setTimeout(() => {
+        const item = languages[index];
+        if (wordEl) wordEl.textContent = item.word;
+        if (subEl) subEl.textContent = item.sub;
+        if (badgeEl) badgeEl.textContent = item.name;
+
+        wordEl.classList.remove("changing");
+        subEl.classList.remove("changing");
+      }, 120);
+    }
+
+    if (progressEl) {
+      const percentage = ((index + 1) / total) * 100;
+      progressEl.style.width = `${percentage}%`;
+    }
+  };
+
+  // Set initial state (English)
+  updateLanguage(0);
+
+  const runStep = () => {
+    // English stays for 1000ms (1 second), subsequent languages stay for 380ms
+    const delay = currentIndex === 0 ? 1000 : 380;
 
     setTimeout(() => {
-      loader.remove();
-      document.body.classList.remove("loading");
-    }, 350);
+      currentIndex++;
+      if (currentIndex < total) {
+        updateLanguage(currentIndex);
+        runStep();
+      } else {
+        setTimeout(() => {
+          welcomeScreen.style.opacity = "0";
+          welcomeScreen.style.transform = "scale(1.06)";
+          document.body.classList.remove("welcome-active");
+          setTimeout(() => {
+            welcomeScreen.remove();
+          }, 800);
+        }, 400);
+      }
+    }, delay);
+  };
 
-  }, LOADER_DURATION);
+  runStep();
 });
+
+// ================= THREE.JS HYPER-INTERACTIVE 3D BACKGROUND =================
+(function init3DScene() {
+  const canvas = document.getElementById("bg3d");
+  if (!canvas || typeof THREE === "undefined") return;
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  // 1. Diverse 3D Geometries Array
+  const shapesGroup = new THREE.Group();
+  scene.add(shapesGroup);
+
+  const materials = [
+    new THREE.MeshBasicMaterial({ color: 0xff2a85, wireframe: true, transparent: true, opacity: 0.4 }),
+    new THREE.MeshBasicMaterial({ color: 0x00e7ff, wireframe: true, transparent: true, opacity: 0.38 }),
+    new THREE.MeshBasicMaterial({ color: 0x39ff14, wireframe: true, transparent: true, opacity: 0.32 }),
+    new THREE.MeshBasicMaterial({ color: 0xff85c0, wireframe: true, transparent: true, opacity: 0.38 }),
+    new THREE.MeshBasicMaterial({ color: 0xffd700, wireframe: true, transparent: true, opacity: 0.35 })
+  ];
+
+  const geometries = [
+    new THREE.TorusKnotGeometry(1.3, 0.35, 100, 16),
+    new THREE.IcosahedronGeometry(1.6, 1),
+    new THREE.DodecahedronGeometry(1.5, 0),
+    new THREE.OctahedronGeometry(1.4, 0),
+    new THREE.TetrahedronGeometry(1.5, 0),
+    new THREE.TorusGeometry(1.8, 0.25, 16, 100),
+    new THREE.SphereGeometry(1.4, 16, 16),
+    new THREE.CylinderGeometry(0.8, 1.4, 2.2, 12),
+    new THREE.ConeGeometry(1.2, 2.2, 8)
+  ];
+
+  const meshCount = 32; // Expanded object count along scroll path
+  const meshes = [];
+
+  for (let i = 0; i < meshCount; i++) {
+    const geom = geometries[i % geometries.length];
+    const mat = materials[i % materials.length];
+    const mesh = new THREE.Mesh(geom, mat);
+
+    // Spread shapes across wider Y (vertical scroll) and Z (depth) coordinates
+    mesh.position.x = (Math.random() - 0.5) * 28;
+    mesh.position.y = (Math.random() - 0.5) * 65; // Spreads across scroll travel height
+    mesh.position.z = (Math.random() - 0.5) * 35 - 8;
+
+    mesh.rotation.x = Math.random() * Math.PI;
+    mesh.rotation.y = Math.random() * Math.PI;
+
+    const scale = 0.55 + Math.random() * 0.7;
+    mesh.scale.set(scale, scale, scale);
+
+    mesh.userData = {
+      rotX: (Math.random() - 0.5) * 0.012,
+      rotY: (Math.random() - 0.5) * 0.012,
+      floatSpeed: 0.001 + Math.random() * 0.002,
+      initialY: mesh.position.y
+    };
+
+    shapesGroup.add(mesh);
+    meshes.push(mesh);
+  }
+
+  // 2. Dynamic 3D Particle Starfield
+  const particleCount = 2000;
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+
+  const color1 = new THREE.Color(0xff2a85);
+  const color2 = new THREE.Color(0x00e7ff);
+  const color3 = new THREE.Color(0x39ff14);
+
+  for (let i = 0; i < particleCount; i++) {
+    positions[i * 3] = (Math.random() - 0.5) * 55;
+    positions[i * 3 + 1] = (Math.random() - 0.5) * 80;
+    positions[i * 3 + 2] = (Math.random() - 0.5) * 45;
+
+    const rand = Math.random();
+    const mixedColor = rand < 0.5 ? color1.clone().lerp(color2, rand * 2) : color2.clone().lerp(color3, (rand - 0.5) * 2);
+    colors[i * 3] = mixedColor.r;
+    colors[i * 3 + 1] = mixedColor.g;
+    colors[i * 3 + 2] = mixedColor.b;
+  }
+
+  const particleGeom = new THREE.BufferGeometry();
+  particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const particleMat = new THREE.PointsMaterial({
+    size: 0.09,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.8
+  });
+
+  const particleSystem = new THREE.Points(particleGeom, particleMat);
+  scene.add(particleSystem);
+
+  // 3. Click Shockwave Explosions
+  const shockwaves = [];
+
+  window.addEventListener("click", (e) => {
+    const mouseX = (e.clientX / window.innerWidth - 0.5) * 20;
+    const mouseY = -(e.clientY / window.innerHeight - 0.5) * 15;
+
+    const waveGeom = new THREE.RingGeometry(0.1, 0.2, 32);
+    const waveMat = new THREE.MeshBasicMaterial({
+      color: Math.random() > 0.5 ? 0xff2a85 : 0x00e7ff,
+      side: THREE.DoubleSide,
+      transparent: true,
+      opacity: 0.9
+    });
+    const wave = new THREE.Mesh(waveGeom, waveMat);
+    wave.position.set(mouseX, mouseY - currentScrollY * 0.005, 0);
+
+    scene.add(wave);
+    shockwaves.push({ mesh: wave, scale: 1, maxScale: 12 + Math.random() * 8 });
+  });
+
+  camera.position.z = 10;
+
+  // Smooth Non-Glitchy Scroll Tracker
+  let targetMouseX = 0;
+  let targetMouseY = 0;
+  let currentMouseX = 0;
+  let currentMouseY = 0;
+  let targetScrollY = 0;
+  let currentScrollY = 0;
+  let scrollSpeed = 0;
+  let lastScrollY = window.scrollY;
+
+  window.addEventListener("mousemove", (e) => {
+    targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+    targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  window.addEventListener("scroll", () => {
+    targetScrollY = window.scrollY;
+    const deltaY = Math.abs(targetScrollY - lastScrollY);
+    scrollSpeed = deltaY * 0.04;
+    lastScrollY = targetScrollY;
+  });
+
+  // Render Loop
+  let clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const elapsedTime = clock.getElapsedTime();
+
+    // Decay scroll speed warp
+    scrollSpeed *= 0.92;
+
+    // Smooth Lerp Mouse & Scroll
+    currentMouseX += (targetMouseX - currentMouseX) * 0.05;
+    currentMouseY += (targetMouseY - currentMouseY) * 0.05;
+    currentScrollY += (targetScrollY - currentScrollY) * 0.08;
+
+    // Camera perspective traversal on scroll (no glitches, smooth translation)
+    camera.position.x = currentMouseX * 1.6;
+    camera.position.y = -currentScrollY * 0.008 + (-currentMouseY * 1.6);
+    camera.position.z = 10 + Math.sin(currentScrollY * 0.002) * 2 + scrollSpeed * 0.3;
+    camera.lookAt(0, -currentScrollY * 0.008, 0);
+
+    // Smooth 3D Background Group Rotation on Scroll
+    shapesGroup.rotation.y = currentScrollY * 0.0015 + elapsedTime * 0.02;
+    shapesGroup.rotation.x = currentScrollY * 0.0008 + elapsedTime * 0.01;
+    shapesGroup.rotation.z = Math.sin(currentScrollY * 0.001) * 0.15;
+
+    // Individual 3D mesh float & spin
+    meshes.forEach((mesh) => {
+      mesh.rotation.x += mesh.userData.rotX * (1 + scrollSpeed * 2);
+      mesh.rotation.y += mesh.userData.rotY * (1 + scrollSpeed * 2);
+      mesh.position.y = mesh.userData.initialY + Math.sin(elapsedTime * 2 + mesh.position.x) * 0.45;
+    });
+
+    // Particle rotation
+    particleSystem.rotation.y = currentScrollY * 0.001 + elapsedTime * 0.02 + scrollSpeed * 0.05;
+    particleSystem.rotation.x = elapsedTime * 0.01;
+
+    // Expand shockwaves
+    for (let i = shockwaves.length - 1; i >= 0; i--) {
+      const sw = shockwaves[i];
+      sw.scale += 0.4;
+      sw.mesh.scale.set(sw.scale, sw.scale, sw.scale);
+      sw.mesh.material.opacity = 1 - sw.scale / sw.maxScale;
+
+      if (sw.scale >= sw.maxScale) {
+        scene.remove(sw.mesh);
+        sw.mesh.geometry.dispose();
+        sw.mesh.material.dispose();
+        shockwaves.splice(i, 1);
+      }
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // Resize Handler
+  window.addEventListener("resize", () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+// ================= INTERACTIVE 3D CARD TILT ENGINE =================
+(function init3DTilt() {
+  const tiltCards = document.querySelectorAll("[data-tilt]");
+  const maxTilt = 14; // Maximum angle in degrees
+
+  tiltCards.forEach((card) => {
+    card.addEventListener("mousemove", (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+
+      const rotateX = ((y - centerY) / centerY) * -maxTilt;
+      const rotateY = ((x - centerX) / centerX) * maxTilt;
+
+      const glowX = (x / rect.width) * 100;
+      const glowY = (y / rect.height) * 100;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(14px)`;
+      card.style.setProperty("--glow-x", `${glowX.toFixed(1)}%`);
+      card.style.setProperty("--glow-y", `${glowY.toFixed(1)}%`);
+    });
+
+    card.addEventListener("mouseleave", () => {
+      card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
+    });
+  });
+})();
+

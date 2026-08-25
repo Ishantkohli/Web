@@ -7,8 +7,11 @@
     body {
       min-height: 100vh;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: flex-start;
       align-items: center;
+      padding: 100px 1.5rem 3rem;
+      overflow-x: hidden;
       background: radial-gradient(circle at top, #1a1a2e 0%, #050810 40%, #000000 100%);
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: #fff;
@@ -16,6 +19,9 @@
 
     .container {
       text-align: center;
+      max-width: 950px;
+      width: 100%;
+      margin: 0 auto;
     }
 
     h1 {
@@ -37,10 +43,11 @@
     /* Grid for buttons */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 18px;
-      max-width: 650px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 20px;
+      max-width: 900px;
       margin: 0 auto;
+      width: 100%;
     }
 
     /* Neon button base */

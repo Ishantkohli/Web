@@ -3,30 +3,67 @@
 
 <head>
   <meta charset="UTF-8" />
-  <title>My Projects</title>
-  <link rel="stylesheet" , href="neon.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Projects - Ishant Kohli</title>
+  <link rel="stylesheet" href="../style2.css">
+  <link rel="stylesheet" href="neon.css">
+  <!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
-  <div class="container">
-    <h1>My Projects</h1>
+
+  <!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+  <canvas id="bg3d"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
+
+      <div class="header-right">
+        <nav class="nav" id="primaryNav">
+          <a href="../index.html"><span>Home</span></a>
+          <a href="../About/about.html"><span>About</span></a>
+          <a href="../404 Page/404 Codes/index.html"><span>Skills</span></a>
+          <a href="projectpage.html" class="active"><span>Projects</span></a>
+          <a href="../Timeline/timeline.html"><span>Journey</span></a>
+          <a href="../Media/media.html"><span>Media</span></a>
+          <a href="../Contact/contact.html"><span>Contact</span></a>
+        </nav>
+
+        <div class="nav-divider"></div>
+
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button class="menu-toggle" aria-controls="primaryNav" aria-expanded="false">
+          <span>Menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="position: relative; z-index: 2; margin-top: 40px;">
+    <h1 class="brand-3d">My Projects</h1>
     <p>My Projects Link By - Ishant Kohli</p>
     <div class="projects-grid">
-      <a href="https://ishantkohli.github.io/Game/" class="neon-btn">Project 1<br>Submit On 03-11-25 Time:08:10PM</a>
-      <a href="../Media/media.html" class="neon-btn">Project 2 <br> Submit On 05-12-25 Time: 2:00AM</a>
-      <a href="../Rock-Paper/index.html" class="neon-btn">Project 3 <br> Submit On 11-02-26 Time: 09:40PM</a>
-      <a href="https://github.com/Ishantkohli/naviotechproject" class="neon-btn">Project 4 On Task Manager</a>
-      <a href="https://github.com/Ishantkohli/Turbo-IK--APP--" class="neon-btn">App Link (Promotion)<br> Submit On
+      <a href="https://ishantkohli.github.io/Game/" class="neon-btn btn-3d" data-tilt>Project 1<br>Submit On 03-11-25 Time:08:10PM</a>
+      <a href="../Media/media.html" class="neon-btn btn-3d" data-tilt>Project 2 <br> Submit On 05-12-25 Time: 2:00AM</a>
+      <a href="../Rock-Paper/index.html" class="neon-btn btn-3d" data-tilt>Project 3 <br> Submit On 11-02-26 Time: 09:40PM</a>
+      <a href="https://github.com/Ishantkohli/naviotechproject" class="neon-btn btn-3d" data-tilt>Project 4 On Task Manager</a>
+      <a href="https://github.com/Ishantkohli/Turbo-IK--APP--" class="neon-btn btn-3d" data-tilt>App Link (Promotion)<br> Submit On
         10-06-26 Time:12:30 </br></a>
 
-      <a href="https://buzzr-quiz-website.netlify.app/" class="neon-btn">Project 6 <br> Quiz Website
+      <a href="https://buzzr-quiz-website.netlify.app/" class="neon-btn btn-3d" data-tilt>Project 6 <br> Quiz Website
       </a>
-      <a href="/404 Page/404 Codes/index.html" class="neon-btn">Project 7</a>
-      <a href="/404 Page/404 Codes/index.html" class="neon-btn">Project 8</a>
-      <a href="/404 Page/404 Codes/index.html" class="neon-btn">Project 9</a>
-      <a href="/404 Page/404 Codes/index.html" class="neon-btn">Project 10</a>
+      <a href="../404 Page/404 Codes/index.html" class="neon-btn btn-3d" data-tilt>Project 7</a>
+      <a href="../404 Page/404 Codes/index.html" class="neon-btn btn-3d" data-tilt>Project 8</a>
+      <a href="../404 Page/404 Codes/index.html" class="neon-btn btn-3d" data-tilt>Project 9</a>
+      <a href="../404 Page/404 Codes/index.html" class="neon-btn btn-3d" data-tilt>Project 10</a>
     </div>
   </div>
+
+  <script defer src="../script2.js"></script>
 </body>
 
 </html>

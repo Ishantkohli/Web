@@ -14,35 +14,42 @@
   <link rel="stylesheet" href="style2.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="prefetch" href="Projects/projectpage.html">
+  <!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
-<body class="loading">
-  <!-- LOADER OVERLAY -->
-  <div id="page-loader">
-    <div id="loader">
-      <div class="neon-ring"></div>
-      <h1 class="logo"> Just A Movement 😎😉 <span></span>
-      </h1>
-      <p class="status">Ishant Website Loading</p>
+<body class="welcome-active">
 
-      <div class="progress-bar">
-        <span></span>
+  <!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+  <canvas id="bg3d"></canvas>
+
+  <!-- PINK MULTILINGUAL WELCOME SCREEN -->
+  <div id="welcome-screen">
+    <div class="welcome-card">
+      <span class="welcome-badge" id="welcome-lang-badge">English</span>
+      <div class="welcome-text-container">
+        <h1 class="welcome-word" id="welcome-word">Welcome</h1>
+        <p class="welcome-subtext" id="welcome-subtext">Ishant Kohli Site</p>
+      </div>
+      <div class="welcome-progress-bar">
+        <div class="welcome-progress-fill" id="welcome-progress"></div>
       </div>
     </div>
   </div>
 
   <header class="site-header">
     <div class="container header-inner">
-      <a href="index.html" class="brand">Ishant Kohli</a>
+      <a href="index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
 
       <div class="header-right">
         <nav class="nav" id="primaryNav">
-          <a href="#home" class="active">Home</a>
-          <a href="About/about.html">About</a>
-          <a href="404 Page/404 Codes/index.html">Skills</a>
-          <a href="Projects/projectpage.html">Projects</a>
-          <a href="Timeline/timeline.html">Journey</a>
-          <a href="Contact/contact.html">Contact</a>
+          <a href="#home" class="active"><span>Home</span></a>
+          <a href="About/about.html"><span>About</span></a>
+          <a href="404 Page/404 Codes/index.html"><span>Skills</span></a>
+          <a href="Projects/projectpage.html"><span>Projects</span></a>
+          <a href="Timeline/timeline.html"><span>Journey</span></a>
+          <a href="Media/media.html"><span>Media</span></a>
+          <a href="Contact/contact.html"><span>Contact</span></a>
         </nav>
 
         <div class="nav-divider"></div>
@@ -60,24 +67,34 @@
     <!-- Meri Photo -->
     <section class="hero container">
       <div class="hero-grid">
-        <div class="hero-left reveal">
-          <h1>Hi, I'm <span class="accent">Ishant Kohli</span></h1>
+        <div class="hero-left reveal" data-tilt>
+          <div class="cyber-badge-3d">DEVELOPER & CREATIVE</div>
+          <h1 class="title-3d">Hi, I'm <span class="accent">Ishant Kohli</span></h1>
           <p class="roles">Web Developer | Programmer | BCA(H) Student</p>
           <!--Button Color with neon effects-->
           <div class="cta-row">
-            <a href="Projects/projectpage.html" class="btn neon neon-pink">View Projects</a>
-            <a href="Ishant Kohli ResumeCV.pdf" class="btn neon neon-pink">My Resume</a>
-            <a href="https://www.linkedin.com/in/ishant-kohli-292485381/" class="btn outline">Linkedin</a>
+            <a href="Projects/projectpage.html" class="btn neon neon-pink btn-3d"><img src="https://cdn-icons-png.flaticon.com/512/1087/1087815.png" class="social-img-icon" alt="Projects"> View Projects</a>
+            <a href="Ishant Kohli ResumeCV.pdf" class="btn neon neon-pink btn-3d"><img src="https://cdn-icons-png.flaticon.com/512/909/909254.png" class="social-img-icon" alt="Resume"> My Resume</a>
+            <a href="https://www.linkedin.com/in/ishant-kohli-292485381/" class="btn outline btn-3d"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" class="social-img-icon" alt="LinkedIn"> LinkedIn</a>
           </div>
         </div>
         <!-- My Pic-->
         <div class="hero-right reveal">
-          <img src="ishu.png" width="600" height="700" loading="eager" decoding="async" alt="Portrait of Ishant Kohli">
+          <div class="hero-3d-wrapper" data-tilt>
+            <div class="holo-ring holo-ring-1"></div>
+            <div class="holo-ring holo-ring-2"></div>
+            <div class="holo-ring holo-ring-3"></div>
+            <img src="ishu.png" width="600" height="700" loading="eager" decoding="async" alt="Portrait of Ishant Kohli">
+          </div>
         </div>
       </div>
     </section>
     <!-- About -->
-    <section id="about" class="section container reveal">
+    <section id="about" class="section container reveal cyber-panel-3d" data-tilt>
+      <div class="cyber-corner tl"></div>
+      <div class="cyber-corner tr"></div>
+      <div class="cyber-corner bl"></div>
+      <div class="cyber-corner br"></div>
       <h2>About Me</h2>
       <p>
         Hi, My Name is Ishant Kohli im A creative web developer who designs with
@@ -93,40 +110,52 @@
 
       <!-- scrollable wrapper -->
       <div class="music-scroll">
-        <div class="music-card">
+        <div class="music-card cyber-panel-3d" data-tilt>
           <iframe style="border-radius:12px"
             src="https://open.spotify.com/embed/track/6rppebTokeunPoM3bSz19c?utm_source=generator&theme=0" width="100%"
             height="152" frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
             title="Spotify: VOCA NA MIRA">
           </iframe>
+          <div class="visualizer-3d">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
         </div>
 
-        <div class="music-card">
+        <div class="music-card cyber-panel-3d" data-tilt>
           <iframe style="border-radius:12px"
             src="https://open.spotify.com/embed/track/37CaSYZIi8GMTtkvfP2nut?utm_source=generator&theme=0" width="100%"
             height="152" frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
             title="Spotify: Sao Paulo(feat. Anitta)">
           </iframe>
+          <div class="visualizer-3d">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
         </div>
 
-        <div class="music-card">
+        <div class="music-card cyber-panel-3d" data-tilt>
           <iframe style="border-radius:12px"
             src="https://open.spotify.com/embed/track/4nFYEl5adm08DcnNala2fc?utm_source=generator&theme=0" width="100%"
             height="152" frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
             title="Spotify: TE CONOCI">
           </iframe>
+          <div class="visualizer-3d">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
         </div>
 
-        <div class="music-card">
+        <div class="music-card cyber-panel-3d" data-tilt>
           <iframe style="border-radius:12px"
             src="https://open.spotify.com/embed/track/0orvncykYQy4mPnIAdhhKM?utm_source=generator&theme=0" width="100%"
             height="152" frameborder="0"
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"
             title="Spotify: La Curiosidad">
           </iframe>
+          <div class="visualizer-3d">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
         </div>
       </div>
     </section>
@@ -135,21 +164,25 @@
       <h2 class="reveal">Main Links</h2>
 
       <div class="cards">
-        <article class="card reveal">
+        <article class="card reveal cyber-panel-3d" data-tilt>
+          <div class="cyber-corner tl"></div>
+          <div class="cyber-corner br"></div>
           <h3>Projects Page</h3>
           <p>A personal website to showcase skills and projects.</p>
-          <a class="btn neon neon-green small" href="Projects/projectpage.html">Open</a>
+          <a class="btn neon neon-green small btn-3d" href="Projects/projectpage.html">Open</a>
         </article>
 
-        <article class="card reveal">
+        <article class="card reveal cyber-panel-3d" data-tilt>
+          <div class="cyber-corner tl"></div>
+          <div class="cyber-corner br"></div>
           <h3>My Social Media Platform</h3>
           <p>A collection of all my social media profiles.</p>
-          <a class="btn neon neon-blue small" href="Media/media.html">Open</a>
+          <a class="btn neon neon-blue small btn-3d" href="Media/media.html">Open</a>
         </article>
       </div>
     </section>
     <!--FORM -->
-    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST">
+    <form id="contactForm" action="https://api.web3forms.com/submit" method="POST" data-tilt>
       <input type="hidden" name="access_key" value="ae3db375-a739-4ac1-a28b-db45849765ae">
       <input type="checkbox" name="botcheck" class="hidden" style="display: none;">
       <div class="grid">
@@ -172,7 +205,7 @@
       </label>
       <button type="submit" class="btn neon neon-green">Send</button>
     </form>
-    <div class="contact-quick-wrap reveal">
+    <div class="contact-quick-wrap reveal" data-tilt>
       <p class="contact-quick-text" style="text-align: center;">
         <strong>Press This Button To Simply Contact Me On WhatsApp Or just Mail Me.</strong>
       </p>

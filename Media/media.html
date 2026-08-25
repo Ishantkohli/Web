@@ -3,43 +3,77 @@
 <head>
   <meta charset="UTF-8">
   <title>Ishant Kohli Social Media</title>
+  <link rel="stylesheet" href="../style2.css">
   <link rel="stylesheet" href="media_css.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-<div class="menu">
-  <div class="toggle">
-    <ion-icon name="share-social"></ion-icon>
+  <!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+  <canvas id="bg3d"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
+
+      <div class="header-right">
+        <nav class="nav" id="primaryNav">
+          <a href="../index.html"><span>Home</span></a>
+          <a href="../About/about.html"><span>About</span></a>
+          <a href="../404 Page/404 Codes/index.html"><span>Skills</span></a>
+          <a href="../Projects/projectpage.html"><span>Projects</span></a>
+          <a href="../Timeline/timeline.html"><span>Journey</span></a>
+          <a href="media.html" class="active"><span>Media</span></a>
+          <a href="../Contact/contact.html"><span>Contact</span></a>
+        </nav>
+
+        <div class="nav-divider"></div>
+
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button class="menu-toggle" aria-controls="primaryNav" aria-expanded="false">
+          <span>Menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="menu" data-tilt style="margin-top: 80px;">
+    <div class="toggle">
+      <ion-icon name="share-social"></ion-icon>
+    </div>
+
+    <li style="--i: 0; --clr: #1877f2">
+      <a href="https://www.facebook.com/share/1AgpiNawhd/" title="Facebook"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/facebook/facebook-original.svg" style="width: 24px; height: 24px; vertical-align: middle;" alt="Facebook"></a>
+    </li>
+    <li style="--i: 1; --clr: #25d366">
+      <a href="https://wa.me/qr/73CGX6ZNDLTLK1" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670051.png" style="width: 24px; height: 24px; vertical-align: middle;" alt="WhatsApp"></a>
+    </li>
+    <li style="--i: 2; --clr: #1b1e21">
+      <a href="https://x.com/Ishant_Kohli_Dv?t=ZWJ5X3lQ7sXQfz5cyqilGw&s=09" title="X / Twitter"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/twitter/twitter-original.svg" style="width: 24px; height: 24px; vertical-align: middle;" alt="Twitter"></a>
+    </li>
+    <li style="--i: 3; --clr: #ff5733">
+      <a href="https://www.reddit.com/u/Ishant_k/s/eWeBI89LRu" title="Reddit"><img src="https://cdn-icons-png.flaticon.com/512/3670/3670080.png" style="width: 24px; height: 24px; vertical-align: middle;" alt="Reddit"></a>
+    </li>
+    <li style="--i: 4; --clr: #0a66c2">
+      <a href="https://www.linkedin.com/in/ishant-kohli-292485381?utm_source=share_via&utm_content=profile&utm_medium=member_android" title="LinkedIn"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" style="width: 24px; height: 24px; vertical-align: middle;" alt="LinkedIn"></a>
+    </li>
+    <li style="--i: 5; --clr: #c32aa3">
+      <a href="https://www.instagram.com/ishantk_is?igsh=MW1oMTBreWZnemNpdA==" title="Instagram"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" style="width: 24px; height: 24px; vertical-align: middle;" alt="Instagram"></a>
+    </li>
+    <li style="--i: 6; --clr: #1b1e21">
+      <a href="https://github.com/Ishantkohli" title="GitHub"><img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" style="width: 24px; height: 24px; vertical-align: middle; filter: invert(1);" alt="GitHub"></a>
+    </li>
+    <li style="--i: 7; --clr: #ff0000">
+      <a href="https://www.youtube.com/" title="YouTube"><img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" style="width: 24px; height: 24px; vertical-align: middle;" alt="YouTube"></a>
+    </li>
   </div>
 
-  <li style="--i: 0; --clr: #1877f2">
-    <a href="https://www.facebook.com/share/1AgpiNawhd/"><i class="fab fa-facebook-f"></i></a>
-  </li>
-  <li style="--i: 1; --clr: #25d366">
-    <a href="https://wa.me/qr/73CGX6ZNDLTLK1"><i class="fab fa-whatsapp"></i></a>
-  </li>
-  <li style="--i: 2; --clr: #1b1e21">
-    <a href="https://x.com/Ishant_Kohli_Dv?t=ZWJ5X3lQ7sXQfz5cyqilGw&s=09"><i class="fab fa-x-twitter"></i></a>
-  </li>
-  <li style="--i: 3; --clr: #ff5733">
-    <a href="https://www.reddit.com/u/Ishant_k/s/eWeBI89LRu"><i class="fab fa-reddit-alien"></i></a>
-  </li>
-  <li style="--i: 4; --clr: #0a66c2">
-    <a href="https://www.linkedin.com/in/ishant-kohli-292485381?utm_source=share_via&utm_content=profile&utm_medium=member_android"><i class="fab fa-linkedin-in"></i></a>
-  </li>
-  <li style="--i: 5; --clr: #c32aa3">
-    <a href="https://www.instagram.com/ishantk_is?igsh=MW1oMTBreWZnemNpdA=="><i class="fab fa-instagram"></i></a>
-  </li>
-  <li style="--i: 6; --clr: #1b1e21">
-    <a href="https://github.com/Ishantkohli"><i class="fab fa-github"></i></a>
-  </li>
-  <li style="--i: 7; --clr: #ff0000">
-    <a href=""><i class="fab fa-youtube"></i></a>
-  </li>
-</div>
-
-<script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
-<script  src="media_js.js"></script>
+  <script src='https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js'></script>
+  <script src="media_js.js"></script>
+  <script defer src="../script2.js"></script>
 </body>
 </html>

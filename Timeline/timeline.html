@@ -4,21 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Timeline</title>
+    <title>My Timeline - Ishant Kohli</title>
+    <link rel="stylesheet" href="../style2.css">
     <link rel="stylesheet" href="timeline.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
-    <div class="timeline-container">
+
+    <!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+    <canvas id="bg3d"></canvas>
+
+    <header class="site-header">
+        <div class="container header-inner">
+            <a href="../index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
+
+            <div class="header-right">
+                <nav class="nav" id="primaryNav">
+                    <a href="../index.html"><span>Home</span></a>
+                    <a href="../About/about.html"><span>About</span></a>
+                    <a href="../404 Page/404 Codes/index.html"><span>Skills</span></a>
+                    <a href="../Projects/projectpage.html"><span>Projects</span></a>
+                    <a href="timeline.html" class="active"><span>Journey</span></a>
+                    <a href="../Media/media.html"><span>Media</span></a>
+                    <a href="../Contact/contact.html"><span>Contact</span></a>
+                </nav>
+
+                <div class="nav-divider"></div>
+
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="menu-toggle" aria-controls="primaryNav" aria-expanded="false">
+                    <span>Menu</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="timeline-container" style="margin-top: 40px;">
         <div class="timeline-header">
-            <h2>Ishant Kohli Journey</h2>
+            <h2 class="brand-3d">Ishant Kohli Journey</h2>
         </div>
         <div class="timeline">
             <!-- Event 1: School -->
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-content">
+                <div class="timeline-content cyber-panel-3d" data-tilt>
+                    <div class="cyber-corner tl"></div>
+                    <div class="cyber-corner br"></div>
                     <span class="date">HIGH SCHOOL</span>
                     <h3>In School</h3>
                     <p>My journey began when I was introduced to HTML and CSS in 11th grade, followed by JavaScript in
@@ -29,7 +65,9 @@
             <!-- Event 2: Trinity Institute -->
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-content">
+                <div class="timeline-content cyber-panel-3d" data-tilt>
+                    <div class="cyber-corner tl"></div>
+                    <div class="cyber-corner br"></div>
                     <span class="date">COLLEGE START</span>
                     <h3>Trinity Institute of Professional Studies</h3>
                     <p>Began my BCA(H) program, marking a new chapter of personal growth. My early focus was heavily on
@@ -39,7 +77,9 @@
             <!-- Event 3: ALFA Bootcamp -->
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-content">
+                <div class="timeline-content cyber-panel-3d" data-tilt>
+                    <div class="cyber-corner tl"></div>
+                    <div class="cyber-corner br"></div>
                     <span class="date">SEMESTER 1</span>
                     <h3>ALFA Coding Club Bootcamp</h3>
                     <p>Participated in an intensive bootcamp that perfectly complemented my Web Technology classes.
@@ -50,7 +90,9 @@
             <!-- Event 4: Explores Modern Web -->
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-content">
+                <div class="timeline-content cyber-panel-3d" data-tilt>
+                    <div class="cyber-corner tl"></div>
+                    <div class="cyber-corner br"></div>
                     <span class="date">RECENTLY</span>
                     <h3>Explore Modern Web</h3>
                     <p>Dove deep into advanced CSS, modern JavaScript, and design trends like glassmorphism. I began
@@ -60,7 +102,9 @@
             <!-- Event 5: Present -->
             <div class="timeline-item">
                 <div class="timeline-dot"></div>
-                <div class="timeline-content">
+                <div class="timeline-content cyber-panel-3d" data-tilt>
+                    <div class="cyber-corner tl"></div>
+                    <div class="cyber-corner br"></div>
                     <span class="date">PRESENT (2ND YEAR)</span>
                     <h3>Living Portfolio</h3>
                     <p>I treat this website as a continuous, living project. I actively experiment with new design
@@ -69,6 +113,8 @@
             </div>
         </div>
     </div>
+
+    <script defer src="../script2.js"></script>
 </body>
 
 </html>
