@@ -252,7 +252,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   renderer.setSize(window.innerWidth, window.innerHeight);
-  const maxDPR = isMobile ? Math.min(window.devicePixelRatio, 1.25) : Math.min(window.devicePixelRatio, 2);
+  const maxDPR = isMobile ? 1.0 : Math.min(window.devicePixelRatio, 2);
   renderer.setPixelRatio(maxDPR);
 
   // 1. Diverse 3D Geometries Array
@@ -268,18 +268,18 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
 
   const geometries = [
-    new THREE.TorusKnotGeometry(1.3, 0.35, isMobile ? 40 : 80, 12),
+    new THREE.TorusKnotGeometry(1.3, 0.35, isMobile ? 32 : 80, 10),
     new THREE.IcosahedronGeometry(1.6, 1),
     new THREE.DodecahedronGeometry(1.5, 0),
     new THREE.OctahedronGeometry(1.4, 0),
     new THREE.TetrahedronGeometry(1.5, 0),
-    new THREE.TorusGeometry(1.8, 0.25, 12, isMobile ? 40 : 80),
-    new THREE.SphereGeometry(1.4, 12, 12),
-    new THREE.CylinderGeometry(0.8, 1.4, 2.2, 10),
+    new THREE.TorusGeometry(1.8, 0.25, 10, isMobile ? 32 : 80),
+    new THREE.SphereGeometry(1.4, 10, 10),
+    new THREE.CylinderGeometry(0.8, 1.4, 2.2, 8),
     new THREE.ConeGeometry(1.2, 2.2, 8)
   ];
 
-  const meshCount = isMobile ? 18 : 32; // Optimized count for 120 FPS frame pacing on mobile
+  const meshCount = isMobile ? 12 : 32; // Optimized for 120 FPS mobile GPU frame pacing
   const meshes = [];
 
   for (let i = 0; i < meshCount; i++) {
@@ -309,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 2. Dynamic 3D Particle Starfield
-  const particleCount = isMobile ? 1000 : 2000;
+  const particleCount = isMobile ? 600 : 2000;
   const positions = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
 
@@ -334,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
   particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
   const particleMat = new THREE.PointsMaterial({
-    size: isMobile ? 0.12 : 0.09,
+    size: isMobile ? 0.14 : 0.09,
     vertexColors: true,
     transparent: true,
     opacity: 0.8
@@ -393,6 +393,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function animate() {
     requestAnimationFrame(animate);
+
+    // Pause WebGL rendering on mobile while welcome screen is active for 100% smooth welcome text transitions
+    if (isMobile && document.body.classList.contains("welcome-active")) {
+      return;
+    }
+
     const elapsedTime = clock.getElapsedTime();
 
     // Decay scroll speed warp
