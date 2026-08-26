@@ -294,13 +294,18 @@ const GyroEngine = (function () {
   function init() {
     if (!window.DeviceOrientationEvent) return;
 
+    const addListeners = () => {
+      window.addEventListener("deviceorientation", handleOrientation, true);
+      window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+    };
+
     // iOS 13+ permission flow
     if (typeof DeviceOrientationEvent.requestPermission === "function") {
       const requestIOSPermission = () => {
         DeviceOrientationEvent.requestPermission()
           .then((permissionState) => {
             if (permissionState === "granted") {
-              window.addEventListener("deviceorientation", handleOrientation, true);
+              addListeners();
             }
           })
           .catch((err) => console.log("Gyro permission notice:", err));
@@ -310,8 +315,14 @@ const GyroEngine = (function () {
       window.addEventListener("click", requestIOSPermission, { once: true, passive: true });
     } else {
       // Standard Android Chrome, Mobile Firefox, Safari, Edge, Opera, WebViews
-      window.addEventListener("deviceorientation", handleOrientation, true);
+      addListeners();
     }
+
+    // Re-evaluate orientation on device rotation
+    window.addEventListener("orientationchange", () => {
+      targetGyroX = 0;
+      targetGyroY = 0;
+    }, { passive: true });
   }
 
   init();
