@@ -232,56 +232,79 @@ document.addEventListener("DOMContentLoaded", () => {
   runStep();
 });
 
-// ================= GYROSCOPE (DEVICE ORIENTATION) BACKGROUND ENGINE =================
+// ================= UNIVERSAL MULTI-LAYER GYRO & MOTION MATRIX ENGINE =================
 const GyroEngine = (function () {
   let targetGyroX = 0;
   let targetGyroY = 0;
   let currentGyroX = 0;
   let currentGyroY = 0;
-  let hasGyroData = false;
 
+  let hasOrientationData = false;
+  let hasGenericSensorData = false;
+  let hasMotionData = false;
+  let hasTouchData = false;
+
+  // Dynamic baseline zero-calibration relative to user's holding position
+  let baseBeta = null;
+  let baseGamma = null;
+
+  // Touch drag offset fallback for devices with sensors disabled
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  function recalibrate() {
+    baseBeta = null;
+    baseGamma = null;
+  }
+
+  // LAYER 1 & 2: W3C Device Orientation Engine (iOS & Android Standard)
   function handleOrientation(e) {
     if (e.beta === null || e.gamma === null) return;
 
-    hasGyroData = true;
+    hasOrientationData = true;
 
-    // Detect device orientation angle (Portrait vs Landscape)
+    if (baseBeta === null || baseGamma === null) {
+      baseBeta = e.beta;
+      baseGamma = e.gamma;
+      return;
+    }
+
     let orientationAngle = 0;
     if (typeof window.orientation !== "undefined") {
       orientationAngle = window.orientation;
     } else if (screen.orientation && typeof screen.orientation.angle !== "undefined") {
       orientationAngle = screen.orientation.angle;
+    } else if (window.matchMedia && window.matchMedia("(orientation: landscape)").matches) {
+      orientationAngle = 90;
     }
 
-    let beta = e.beta;   // Pitch: front-to-back (-180 to 180 deg)
-    let gamma = e.gamma; // Roll: left-to-right (-90 to 90 deg)
+    let deltaBeta = e.beta - baseBeta;   // Up/Down pitch
+    let deltaGamma = e.gamma - baseGamma; // Left/Right roll
 
-    // Standard phone holding position baseline: ~40 deg upright pitch
-    let normBeta = (beta - 40) / 30; // Up/Down tilt
-    let normGamma = gamma / 30;      // Left/Right tilt
+    if (deltaBeta > 180) deltaBeta -= 360;
+    if (deltaBeta < -180) deltaBeta += 360;
 
-    // Clamp values to safe boundaries
-    normBeta = Math.max(-1.5, Math.min(1.5, normBeta));
-    normGamma = Math.max(-1.5, Math.min(1.5, normGamma));
+    let normBeta = Math.max(-3.0, Math.min(3.0, deltaBeta / 8));
+    let normGamma = Math.max(-3.0, Math.min(3.0, deltaGamma / 8));
 
     let rawX = 0;
     let rawY = 0;
 
     switch (orientationAngle) {
-      case 90: // Landscape Left
+      case 90:
         rawX = normBeta;
         rawY = -normGamma;
         break;
       case -90:
-      case 270: // Landscape Right
+      case 270:
         rawX = -normBeta;
         rawY = normGamma;
         break;
-      case 180: // Upside down
+      case 180:
         rawX = -normGamma;
         rawY = -normBeta;
         break;
-      default: // Portrait (0)
+      default:
         rawX = normGamma;
         rawY = normBeta;
         break;
@@ -291,54 +314,127 @@ const GyroEngine = (function () {
     targetGyroY = rawY;
   }
 
-  function init() {
-    if (!window.DeviceOrientationEvent) return;
+  // LAYER 3: DeviceMotion Accelerometer Engine (100% Hardware Compatibility on all Phones)
+  function handleMotion(e) {
+    if (hasOrientationData || hasGenericSensorData) return;
+    if (!e.accelerationIncludingGravity) return;
 
-    const addListeners = () => {
-      window.addEventListener("deviceorientation", handleOrientation, true);
-      window.addEventListener("deviceorientationabsolute", handleOrientation, true);
-    };
+    const acc = e.accelerationIncludingGravity;
+    if (acc.x === null || acc.y === null) return;
 
-    // iOS 13+ permission flow
-    if (typeof DeviceOrientationEvent.requestPermission === "function") {
-      const requestIOSPermission = () => {
-        DeviceOrientationEvent.requestPermission()
-          .then((permissionState) => {
-            if (permissionState === "granted") {
-              addListeners();
-            }
-          })
-          .catch((err) => console.log("Gyro permission notice:", err));
-      };
+    hasMotionData = true;
 
-      window.addEventListener("touchstart", requestIOSPermission, { once: true, passive: true });
-      window.addEventListener("click", requestIOSPermission, { once: true, passive: true });
-    } else {
-      // Standard Android Chrome, Mobile Firefox, Safari, Edge, Opera, WebViews
-      addListeners();
+    let orientationAngle = 0;
+    if (typeof window.orientation !== "undefined") {
+      orientationAngle = window.orientation;
+    } else if (screen.orientation && typeof screen.orientation.angle !== "undefined") {
+      orientationAngle = screen.orientation.angle;
     }
 
-    // Re-evaluate orientation on device rotation
-    window.addEventListener("orientationchange", () => {
-      targetGyroX = 0;
-      targetGyroY = 0;
+    let normX = Math.max(-3.0, Math.min(3.0, -acc.x / 2.5));
+    let normY = Math.max(-3.0, Math.min(3.0, (acc.y - 4.5) / 2.5));
+
+    if (orientationAngle === 90) {
+      targetGyroX = normY;
+      targetGyroY = normX;
+    } else if (orientationAngle === -90 || orientationAngle === 270) {
+      targetGyroX = -normY;
+      targetGyroY = -normX;
+    } else {
+      targetGyroX = normX;
+      targetGyroY = normY;
+    }
+  }
+
+  // LAYER 4: Generic Sensor API (RelativeOrientationSensor for Modern Chromium)
+  function initGenericSensors() {
+    if ("RelativeOrientationSensor" in window) {
+      try {
+        const sensor = new RelativeOrientationSensor({ frequency: 60 });
+        sensor.addEventListener("reading", () => {
+          if (hasOrientationData) return;
+          hasGenericSensorData = true;
+
+          const [q0, q1, q2, q3] = sensor.quaternion;
+          const roll = Math.atan2(2 * (q0 * q1 + q2 * q3), 1 - 2 * (q1 * q1 + q2 * q2)) * (180 / Math.PI);
+          const pitch = Math.asin(Math.max(-1, Math.min(1, 2 * (q0 * q2 - q3 * q1)))) * (180 / Math.PI);
+
+          handleOrientation({ beta: pitch, gamma: roll });
+        });
+        sensor.addEventListener("error", () => {});
+        sensor.start();
+      } catch (err) {}
+    }
+  }
+
+  // LAYER 5: Touch Move Parallax Pan (Universal Touch Fallback for zero-sensor HTTP environments)
+  function initTouchFallback() {
+    window.addEventListener("touchstart", (e) => {
+      if (e.touches && e.touches[0]) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }
+      recalibrate();
     }, { passive: true });
+
+    window.addEventListener("touchmove", (e) => {
+      if (hasOrientationData || hasGenericSensorData || hasMotionData) return;
+      if (!e.touches || !e.touches[0]) return;
+
+      hasTouchData = true;
+      const dx = (e.touches[0].clientX - touchStartX) / (window.innerWidth / 2);
+      const dy = (e.touches[0].clientY - touchStartY) / (window.innerHeight / 2);
+
+      targetGyroX = Math.max(-2.5, Math.min(2.5, dx * 2.0));
+      targetGyroY = Math.max(-2.5, Math.min(2.5, dy * 2.0));
+    }, { passive: true });
+  }
+
+  function init() {
+    // 1. Standard Orientation Listeners
+    window.addEventListener("deviceorientation", handleOrientation, true);
+    window.addEventListener("deviceorientationabsolute", handleOrientation, true);
+    window.addEventListener("devicemotion", handleMotion, true);
+
+    // 2. iOS 13+ Permission Flow
+    if (typeof DeviceOrientationEvent !== "undefined" && typeof DeviceOrientationEvent.requestPermission === "function") {
+      const requestIOSPermission = () => {
+        DeviceOrientationEvent.requestPermission()
+          .then((state) => {
+            if (state === "granted") {
+              window.addEventListener("deviceorientation", handleOrientation, true);
+            }
+          })
+          .catch(() => {});
+      };
+      window.addEventListener("touchstart", requestIOSPermission, { once: true, passive: true });
+      window.addEventListener("click", requestIOSPermission, { once: true, passive: true });
+    }
+
+    // 3. Generic Sensor API
+    initGenericSensors();
+
+    // 4. Touch Parallax Fallback
+    initTouchFallback();
+
+    // 5. Orientation Change Recalibration
+    window.addEventListener("orientationchange", recalibrate, { passive: true });
   }
 
   init();
 
   return {
     getOffsets: function () {
-      // Smooth lerp physics for 60-120 FPS frame pacing
-      currentGyroX += (targetGyroX - currentGyroX) * 0.08;
-      currentGyroY += (targetGyroY - currentGyroY) * 0.08;
+      currentGyroX += (targetGyroX - currentGyroX) * 0.14;
+      currentGyroY += (targetGyroY - currentGyroY) * 0.14;
 
       return {
         x: currentGyroX,
         y: currentGyroY,
-        active: hasGyroData
+        active: hasOrientationData || hasGenericSensorData || hasMotionData || hasTouchData
       };
-    }
+    },
+    recalibrate: recalibrate
   };
 })();
 
@@ -519,28 +615,29 @@ const GyroEngine = (function () {
     currentMouseY += (targetMouseY - currentMouseY) * 0.06;
     currentScrollY += (targetScrollY - currentScrollY) * 0.09;
 
-    // Get smoothed Gyro Offsets from device orientation (ONLY background moves)
+    // Get smoothed Gyro Offsets from device orientation or accelerometer motion
     const gyro = GyroEngine.getOffsets();
 
-    // Combine Mouse & Gyro inputs seamlessly
-    const combinedX = currentMouseX + gyro.x * 2.2;
-    const combinedY = currentMouseY + gyro.y * 2.2;
+    // Combine Mouse & Gyro inputs seamlessly with high amplitude for visible mobile 3D parallax
+    const combinedX = currentMouseX + gyro.x * 4.5;
+    const combinedY = currentMouseY + gyro.y * 4.5;
 
     // Camera perspective movement with device tilt
-    camera.position.x = combinedX * 1.5;
-    camera.position.y = -currentScrollY * 0.008 + (-combinedY * 1.5);
+    camera.position.x = combinedX * 2.0;
+    camera.position.y = -currentScrollY * 0.008 + (-combinedY * 2.0);
     camera.position.z = 10 + Math.sin(currentScrollY * 0.002) * 2 + scrollSpeed * 0.3;
 
-    // Subtle spatial rotational parallax on phone tilt
-    camera.rotation.z = -gyro.x * 0.14;
-    camera.rotation.x = gyro.y * 0.1;
+    // Spatial rotational parallax on phone tilt
+    camera.rotation.z = -gyro.x * 0.35;
+    camera.rotation.x = gyro.y * 0.25;
 
     camera.lookAt(0, -currentScrollY * 0.008, 0);
 
-    // 3D Background Group Rotation with Gyro reaction
-    shapesGroup.rotation.y = currentScrollY * 0.0015 + elapsedTime * 0.02 + gyro.x * 0.25;
-    shapesGroup.rotation.x = currentScrollY * 0.0008 + elapsedTime * 0.01 + gyro.y * 0.15;
-    shapesGroup.rotation.z = Math.sin(currentScrollY * 0.001) * 0.15;
+    // 3D Background Group Translation & Rotation with strong Gyro reaction
+    shapesGroup.rotation.y = currentScrollY * 0.0015 + elapsedTime * 0.02 + gyro.x * 0.8;
+    shapesGroup.rotation.x = currentScrollY * 0.0008 + elapsedTime * 0.01 + gyro.y * 0.6;
+    shapesGroup.position.x = gyro.x * 3.5;
+    shapesGroup.position.y = -gyro.y * 3.5;
 
     // Individual 3D mesh float & spin
     for (let i = 0; i < meshes.length; i++) {
@@ -550,9 +647,11 @@ const GyroEngine = (function () {
       mesh.position.y = mesh.userData.initialY + Math.sin(elapsedTime * 2 + mesh.position.x) * 0.45;
     }
 
-    // Particle rotation
-    particleSystem.rotation.y = currentScrollY * 0.001 + elapsedTime * 0.02 + scrollSpeed * 0.05 + gyro.x * 0.1;
-    particleSystem.rotation.x = elapsedTime * 0.01 + gyro.y * 0.05;
+    // Particle rotation & shift
+    particleSystem.rotation.y = currentScrollY * 0.001 + elapsedTime * 0.02 + scrollSpeed * 0.05 + gyro.x * 0.4;
+    particleSystem.rotation.x = elapsedTime * 0.01 + gyro.y * 0.3;
+    particleSystem.position.x = gyro.x * 2.0;
+    particleSystem.position.y = -gyro.y * 2.0;
 
     // Expand shockwaves
     for (let i = shockwaves.length - 1; i >= 0; i--) {
