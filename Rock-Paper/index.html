@@ -1,52 +1,93 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Rock Paper Scissors Game(IK)</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Rock Paper Scissors Game - Ishant Kohli</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../style2.css" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- THREE.JS FOR 3D WEBGL GRAPHICS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-<!-- partial:index.partial.html -->
-<section class="container">
-  <div class="result_field">
-    <div class="result_images">
-      <span class="user_result">
-        <img src="rock.png" alt="Rock Image" />
-      </span>
-      <span class="cpu_result">
-        <img src="rock.png" alt="Rock Image" />
-      </span>
+
+  <!-- 3D WEBGL INTERACTIVE CANVAS BACKGROUND -->
+  <canvas id="bg3d"></canvas>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="brand"><span class="brand-3d">Ishant Kohli</span></a>
+
+      <div class="header-right">
+        <nav class="nav" id="primaryNav">
+          <a href="../index.html"><span>Home</span></a>
+          <a href="../About/about.html"><span>About</span></a>
+          <a href="../404 Page/404 Codes/index.html"><span>Skills</span></a>
+          <a href="../Projects/projectpage.html" class="active"><span>Projects</span></a>
+          <a href="../Timeline/timeline.html"><span>Journey</span></a>
+          <a href="../Media/media.html"><span>Media</span></a>
+          <a href="../Contact/contact.html"><span>Contact</span></a>
+        </nav>
+
+        <div class="nav-divider"></div>
+
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button class="menu-toggle" aria-controls="primaryNav" aria-expanded="false">
+          <span>Menu</span>
+        </button>
+      </div>
     </div>
-    <div class="result">Let's Play!!</div>
+  </header>
+
+  <div style="margin-top: 60px; padding: 20px; display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 80px);">
+    <section class="container cyber-panel-3d" data-tilt>
+      <div class="cyber-corner tl"></div>
+      <div class="cyber-corner tr"></div>
+      <div class="cyber-corner bl"></div>
+      <div class="cyber-corner br"></div>
+      <div class="result_field">
+        <div class="result_images">
+          <span class="user_result">
+            <img src="rock.png" alt="Rock Image" />
+          </span>
+          <span class="cpu_result">
+            <img src="rock.png" alt="Rock Image" />
+          </span>
+        </div>
+        <div class="result">Let's Play!!</div>
+      </div>
+
+      <div class="mode_select">
+        <button id="pvpBtn">Player vs Player</button>
+        <button id="botBtn">Player vs Bot</button>
+
+        <select id="levelSelect" style="display:none;">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+          <option value="impossible">Impossible</option>
+        </select>
+      </div>
+      <div class="option_images">
+        <span class="option_image">
+          <img src="rock.png" alt="Rock Image" />
+          <p>Rock</p>
+        </span>
+        <span class="option_image">
+          <img src="paper.png" alt="Paper Image" />
+          <p>Paper</p>
+        </span>
+        <span class="option_image">
+          <img src="Scissors.png" alt="Scissors Image" />
+          <p>Scissors</p>
+        </span>
+      </div>
+    </section>
   </div>
 
-<div class="mode_select">
-  <button id="pvpBtn">Player vs Player</button>
-  <button id="botBtn">Player vs Bot</button>
-
-  <select id="levelSelect" style="display:none;">
-    <option value="easy">Easy</option>
-    <option value="medium">Medium</option>
-    <option value="hard">Hard</option>
-    <option value="impossible">Impossible</option>
-  </select>
-</div>
-  <div class="option_images">
-    <span class="option_image">
-      <img src="rock.png" alt="Rock Image" />
-      <p>Rock</p>
-    </span>
-    <span class="option_image">
-      <img src="paper.png" alt="Paper Image" />
-      <p>Paper</p>
-    </span>
-    <span class="option_image">
-      <img src="Scissors.png" alt="Scissors Image" />
-      <p>Scissors</p>
-    </span>
-  </div>
-</section>
-<!-- partial -->
-  <script  src="script.js"></script>
+  <script src="script.js"></script>
+  <script defer src="../script2.js"></script>
 </body>
 </html>

@@ -232,6 +232,105 @@ document.addEventListener("DOMContentLoaded", () => {
   runStep();
 });
 
+// ================= GYROSCOPE (DEVICE ORIENTATION) BACKGROUND ENGINE =================
+const GyroEngine = (function () {
+  let targetGyroX = 0;
+  let targetGyroY = 0;
+  let currentGyroX = 0;
+  let currentGyroY = 0;
+  let hasGyroData = false;
+
+  function handleOrientation(e) {
+    if (e.beta === null || e.gamma === null) return;
+
+    hasGyroData = true;
+
+    // Detect device orientation angle (Portrait vs Landscape)
+    let orientationAngle = 0;
+    if (typeof window.orientation !== "undefined") {
+      orientationAngle = window.orientation;
+    } else if (screen.orientation && typeof screen.orientation.angle !== "undefined") {
+      orientationAngle = screen.orientation.angle;
+    }
+
+    let beta = e.beta;   // Pitch: front-to-back (-180 to 180 deg)
+    let gamma = e.gamma; // Roll: left-to-right (-90 to 90 deg)
+
+    // Standard phone holding position baseline: ~40 deg upright pitch
+    let normBeta = (beta - 40) / 30; // Up/Down tilt
+    let normGamma = gamma / 30;      // Left/Right tilt
+
+    // Clamp values to safe boundaries
+    normBeta = Math.max(-1.5, Math.min(1.5, normBeta));
+    normGamma = Math.max(-1.5, Math.min(1.5, normGamma));
+
+    let rawX = 0;
+    let rawY = 0;
+
+    switch (orientationAngle) {
+      case 90: // Landscape Left
+        rawX = normBeta;
+        rawY = -normGamma;
+        break;
+      case -90:
+      case 270: // Landscape Right
+        rawX = -normBeta;
+        rawY = normGamma;
+        break;
+      case 180: // Upside down
+        rawX = -normGamma;
+        rawY = -normBeta;
+        break;
+      default: // Portrait (0)
+        rawX = normGamma;
+        rawY = normBeta;
+        break;
+    }
+
+    targetGyroX = rawX;
+    targetGyroY = rawY;
+  }
+
+  function init() {
+    if (!window.DeviceOrientationEvent) return;
+
+    // iOS 13+ permission flow
+    if (typeof DeviceOrientationEvent.requestPermission === "function") {
+      const requestIOSPermission = () => {
+        DeviceOrientationEvent.requestPermission()
+          .then((permissionState) => {
+            if (permissionState === "granted") {
+              window.addEventListener("deviceorientation", handleOrientation, true);
+            }
+          })
+          .catch((err) => console.log("Gyro permission notice:", err));
+      };
+
+      window.addEventListener("touchstart", requestIOSPermission, { once: true, passive: true });
+      window.addEventListener("click", requestIOSPermission, { once: true, passive: true });
+    } else {
+      // Standard Android Chrome, Mobile Firefox, Safari, Edge, Opera, WebViews
+      window.addEventListener("deviceorientation", handleOrientation, true);
+    }
+  }
+
+  init();
+
+  return {
+    getOffsets: function () {
+      // Smooth lerp physics for 60-120 FPS frame pacing
+      currentGyroX += (targetGyroX - currentGyroX) * 0.08;
+      currentGyroY += (targetGyroY - currentGyroY) * 0.08;
+
+      return {
+        x: currentGyroX,
+        y: currentGyroY,
+        active: hasGyroData
+      };
+    }
+  };
+})();
+
 // ================= THREE.JS HYPER-INTERACTIVE 3D BACKGROUND =================
 (function init3DScene() {
   const canvas = document.getElementById("bg3d");
@@ -409,15 +508,27 @@ document.addEventListener("DOMContentLoaded", () => {
     currentMouseY += (targetMouseY - currentMouseY) * 0.06;
     currentScrollY += (targetScrollY - currentScrollY) * 0.09;
 
-    // Camera perspective traversal
-    camera.position.x = currentMouseX * 1.5;
-    camera.position.y = -currentScrollY * 0.008 + (-currentMouseY * 1.5);
+    // Get smoothed Gyro Offsets from device orientation (ONLY background moves)
+    const gyro = GyroEngine.getOffsets();
+
+    // Combine Mouse & Gyro inputs seamlessly
+    const combinedX = currentMouseX + gyro.x * 2.2;
+    const combinedY = currentMouseY + gyro.y * 2.2;
+
+    // Camera perspective movement with device tilt
+    camera.position.x = combinedX * 1.5;
+    camera.position.y = -currentScrollY * 0.008 + (-combinedY * 1.5);
     camera.position.z = 10 + Math.sin(currentScrollY * 0.002) * 2 + scrollSpeed * 0.3;
+
+    // Subtle spatial rotational parallax on phone tilt
+    camera.rotation.z = -gyro.x * 0.14;
+    camera.rotation.x = gyro.y * 0.1;
+
     camera.lookAt(0, -currentScrollY * 0.008, 0);
 
-    // 3D Background Group Rotation
-    shapesGroup.rotation.y = currentScrollY * 0.0015 + elapsedTime * 0.02;
-    shapesGroup.rotation.x = currentScrollY * 0.0008 + elapsedTime * 0.01;
+    // 3D Background Group Rotation with Gyro reaction
+    shapesGroup.rotation.y = currentScrollY * 0.0015 + elapsedTime * 0.02 + gyro.x * 0.25;
+    shapesGroup.rotation.x = currentScrollY * 0.0008 + elapsedTime * 0.01 + gyro.y * 0.15;
     shapesGroup.rotation.z = Math.sin(currentScrollY * 0.001) * 0.15;
 
     // Individual 3D mesh float & spin
@@ -429,8 +540,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Particle rotation
-    particleSystem.rotation.y = currentScrollY * 0.001 + elapsedTime * 0.02 + scrollSpeed * 0.05;
-    particleSystem.rotation.x = elapsedTime * 0.01;
+    particleSystem.rotation.y = currentScrollY * 0.001 + elapsedTime * 0.02 + scrollSpeed * 0.05 + gyro.x * 0.1;
+    particleSystem.rotation.x = elapsedTime * 0.01 + gyro.y * 0.05;
 
     // Expand shockwaves
     for (let i = shockwaves.length - 1; i >= 0; i--) {

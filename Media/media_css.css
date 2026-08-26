@@ -3,6 +3,9 @@
   padding: 0;
   box-sizing: border-box;
 }
+html {
+  background: #0d1117;
+}
 body {
   display: flex;
   flex-direction: column;
@@ -12,7 +15,7 @@ body {
   padding: 120px 1.5rem 3rem;
   box-sizing: border-box;
   overflow-x: hidden;
-  background: #252432;
+  background: transparent;
 }
 .menu {
   position: relative;
