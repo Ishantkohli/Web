@@ -506,9 +506,10 @@ const GyroEngine = (function () {
   let scrollSpeed = 0;
   let lastScrollY = window.scrollY;
 
+  // Mouse tracking disabled to keep camera steady on hover
   window.addEventListener("mousemove", (e) => {
-    targetMouseX = (e.clientX / window.innerWidth - 0.5) * 2;
-    targetMouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+    targetMouseX = 0;
+    targetMouseY = 0;
   }, { passive: true });
 
   window.addEventListener("scroll", () => {
@@ -607,44 +608,8 @@ const GyroEngine = (function () {
   }, { passive: true });
 })();
 
-// ================= INTERACTIVE 3D CARD TILT ENGINE (rAF OPTIMIZED) =================
+// ================= INTERACTIVE 3D CARD TILT ENGINE (DISABLED FOR STABILITY) =================
 (function init3DTilt() {
-  const tiltCards = document.querySelectorAll("[data-tilt]");
-  const maxTilt = 14;
-
-  tiltCards.forEach((card) => {
-    let ticking = false;
-
-    card.addEventListener("mousemove", (e) => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-
-          const rotateX = ((y - centerY) / centerY) * -maxTilt;
-          const rotateY = ((x - centerX) / centerX) * maxTilt;
-
-          const glowX = (x / rect.width) * 100;
-          const glowY = (y / rect.height) * 100;
-
-          card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateZ(14px)`;
-          card.style.setProperty("--glow-x", `${glowX.toFixed(1)}%`);
-          card.style.setProperty("--glow-y", `${glowY.toFixed(1)}%`);
-          ticking = false;
-        });
-        ticking = true;
-      }
-    }, { passive: true });
-
-    card.addEventListener("mouseleave", () => {
-      requestAnimationFrame(() => {
-        card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)";
-      });
-    }, { passive: true });
-  });
+  // Tilt engine disabled to prevent hover glitches
 })();
 

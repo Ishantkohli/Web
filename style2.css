@@ -131,9 +131,9 @@ p {
   margin: 0;
   box-sizing: border-box;
   border-radius: 50px;
-  background: var(--glass-bg);
-  backdrop-filter: blur(20px) saturate(200%);
-  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  background: rgba(12, 14, 22, 0.94);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid var(--glass-border);
   box-shadow: 0 8px 32px var(--glass-shadow), inset 0 1px 2px rgba(255, 255, 255, 0.1);
   transition: background 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
@@ -792,18 +792,18 @@ main {
 }
 
 .brand:hover .brand-3d {
-  transform: translateZ(20px) scale(1.08) rotateX(-5deg);
+  transform: none;
 }
 
 .nav a span {
   display: inline-block;
-  transition: transform 0.25s ease, color 0.25s ease, text-shadow 0.25s ease;
+  transition: color 0.2s ease;
 }
 
 .nav a:hover span {
-  transform: translateZ(14px) translateY(-2px);
-  color: #ff2a85;
-  text-shadow: 0 0 12px #ff2a85;
+  transform: none;
+  color: #ff3cac;
+  text-shadow: none;
 }
 
 .theme-toggle {
@@ -812,7 +812,7 @@ main {
 }
 
 .theme-toggle:hover {
-  transform: rotateY(180deg) scale(1.15);
+  transform: scale(1.1);
 }
 
 /* 3D Cyber Badge & Volumetric 3D Buttons */
@@ -837,12 +837,12 @@ main {
 }
 
 .btn-3d:hover {
-  transform: translateZ(25px) translateY(-3px) scale(1.05) !important;
-  box-shadow: 0 10px 25px rgba(255, 42, 133, 0.5), 0 0 30px rgba(0, 231, 255, 0.4) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4) !important;
 }
 
 .btn-3d:active {
-  transform: translateZ(10px) translateY(1px) scale(0.98) !important;
+  transform: translateY(0px) !important;
 }
 
 /* 3D Tilt Card Base & Specular Glare */
@@ -855,33 +855,22 @@ main {
 }
 
 [data-tilt]::before {
-  content: '';
-  position: absolute;
-  inset: -100%;
-  background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), rgba(255, 255, 255, 0.18) 0%, transparent 60%);
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 5;
-}
-
-[data-tilt]:hover::before {
-  opacity: 1;
+  display: none;
 }
 
 /* Cyber Panel 3D Framework */
 .cyber-panel-3d {
   position: relative;
-  background: rgba(15, 20, 35, 0.6) !important;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(15, 20, 32, 0.9) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 42, 133, 0.25) !important;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(255, 42, 133, 0.08) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
 }
 
 .cyber-panel-3d:hover {
   border-color: rgba(0, 231, 255, 0.6) !important;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(0, 231, 255, 0.3), inset 0 0 25px rgba(0, 231, 255, 0.12) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6) !important;
 }
 
 .cyber-corner {
