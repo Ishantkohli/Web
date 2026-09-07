@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Electric Social Media Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      --color-neutral-950: #06070a;
+      --color-neutral-900: #0d1017;
+      --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'Space Grotesk', monospace;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background-color: var(--color-neutral-950);
+      color: #f1f5f9;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 50px 1.25rem 4rem;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient lighting grid */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: 
+        radial-gradient(circle at 50% 15%, rgba(99, 72, 221, 0.14) 0%, transparent 60%),
+        radial-gradient(circle at 85% 65%, rgba(225, 48, 108, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 15% 75%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 48px 48px, 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* SVG Filter container */
+    .svg-container {
+      position: absolute;
+      width: 0;
+      height: 0;
+      pointer-events: none;
+      opacity: 0;
+      overflow: hidden;
+    }
+
+    /* Header text */
+    .banner-header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      margin-bottom: 44px;
+      padding: 0 1rem;
+    }
+
+    .banner-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 14px;
+    }
+
+    .banner-badge .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: pulseDot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(0.9); opacity: 0.8; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+
+    .banner-title {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      text-shadow: 0 4px 16px rgba(0, 0, 0, 0.8);
+    }
+
+    .banner-subtitle {
+      font-size: clamp(14px, 2vw, 16px);
+      color: #94a3b8;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Cards Responsive Grid */
+    .cards-grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 32px;
+      max-width: 1360px;
+      width: 100%;
+      justify-items: center;
+      align-items: stretch;
+      padding: 10px 4px;
+    }
+
+    /* Individual Card Container */
+    .card-container {
+      width: 100%;
+      max-width: 325px;
+      min-width: 270px;
+      padding: 2px;
+      border-radius: 26px;
+      position: relative;
+      background: linear-gradient(
+          -30deg,
+          var(--gradient-color),
+          transparent 50%,
+          var(--gradient-color)
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(15, 17, 23, 0.95),
+          rgba(15, 17, 23, 0.95)
+        );
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+      content-visibility: auto;
+      contain-intrinsic-size: 325px 440px;
+      transform: translateZ(0);
+    }
+
+    .card-container:hover {
+      transform: translateY(-8px) translateZ(0);
+    }
+
+    /* Inner container */
+    .inner-container {
+      position: relative;
+      border-radius: 24px;
+      height: 440px;
+      width: 100%;
+    }
+
+    /* Outer static border frame */
+    .border-outer {
+      border: 2px solid var(--border-outer-color);
+      border-radius: 24px;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      padding-right: 4px;
+      padding-bottom: 4px;
+    }
+
+    /* Main electric card applying the SVG turbulence displacement filter */
+    .main-card {
+      width: calc(100% + 8px);
+      height: calc(100% + 8px);
+      border-radius: 24px;
+      border: 2px solid var(--electric-border-color);
+      margin-top: -4px;
+      margin-left: -4px;
+      filter: url(#turbulent-displace);
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      box-sizing: border-box;
+      transform: translateZ(0);
+      will-change: filter;
+    }
+
+    /* Dual Glow Layers */
+    .glow-layer-1 {
+      border: 2px solid var(--electric-glow-1);
+      border-radius: 24px;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      filter: blur(1.5px);
+      pointer-events: none;
+      transform: translateZ(0);
+    }
+
+    .glow-layer-2 {
+      border: 2px solid var(--electric-light-color);
+      border-radius: 24px;
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      filter: blur(4px);
+      pointer-events: none;
+      transform: translateZ(0);
+    }
+
+    /* Overlays for high-voltage energy highlights */
+    .overlay-1 {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px;
+      opacity: 0.85;
+      mix-blend-mode: overlay;
+      transform: scale(1.05) translateZ(0);
+      filter: blur(14px);
+      background: linear-gradient(
+        -30deg,
+        rgba(255, 255, 255, 0.9),
+        transparent 35%,
+        transparent 65%,
+        rgba(255, 255, 255, 0.9)
+      );
+      pointer-events: none;
+    }
+
+    .overlay-2 {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px;
+      opacity: 0.4;
+      mix-blend-mode: overlay;
+      transform: scale(1.05) translateZ(0);
+      filter: blur(16px);
+      background: linear-gradient(
+        -30deg,
+        rgba(255, 255, 255, 0.8),
+        transparent 30%,
+        transparent 70%,
+        rgba(255, 255, 255, 0.8)
+      );
+      pointer-events: none;
+    }
+
+    /* Atmospheric ambient glow behind the card */
+    .background-glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 24px;
+      filter: blur(32px);
+      transform: scale(1.1) translateZ(0);
+      opacity: 0.35;
+      z-index: -1;
+      background: var(--background-glow-gradient);
+      transition: opacity 0.4s ease, filter 0.4s ease;
+      pointer-events: none;
+    }
+
+    .card-container:hover .background-glow {
+      opacity: 0.65;
+      filter: blur(40px);
+    }
+
+    /* Content container inside the card */
+    .content-container {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px 24px;
+      z-index: 2;
+      border-radius: 24px;
+      background: radial-gradient(
+        120% 100% at 50% 10%,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(0, 0, 0, 0.25) 60%,
+        rgba(0, 0, 0, 0.6) 100%
+      );
+    }
+
+    /* Top row inside card */
+    .content-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .scrollbar-glass {
+      background: radial-gradient(
+          47.2% 50% at 50.39% 88.37%,
+          rgba(255, 255, 255, 0.16) 0%,
+          rgba(255, 255, 255, 0) 100%
+        ),
+        rgba(255, 255, 255, 0.05);
+      position: relative;
+      transition: all 0.3s ease;
+      border-radius: 12px;
+      width: fit-content;
+      padding: 5px 12px;
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: rgba(255, 255, 255, 0.85);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .scrollbar-glass:hover {
+      background: radial-gradient(
+          47.2% 50% at 50.39% 88.37%,
+          rgba(255, 255, 255, 0.22) 0%,
+          rgba(255, 255, 255, 0.1) 100%
+        ),
+        rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .scrollbar-glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      background: linear-gradient(
+        150deg,
+        rgba(255, 255, 255, 0.5) 16.73%,
+        rgba(255, 255, 255, 0.1) 30.2%,
+        rgba(255, 255, 255, 0.1) 68.2%,
+        rgba(255, 255, 255, 0.6) 81.89%
+      );
+      border-radius: inherit;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask-composite: xor;
+      -webkit-mask-composite: xor;
+      pointer-events: none;
+    }
+
+    .electric-tag {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--electric-light-color);
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-shadow: 0 0 8px var(--gradient-color);
+    }
+
+    /* Center Content Area */
+    .content-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin: auto 0;
+      padding: 12px 0;
+    }
+
+    .social-icon-wrapper {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+      transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card-container:hover .social-icon-wrapper {
+      transform: scale(1.08);
+      border-color: var(--electric-light-color);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--gradient-color);
+    }
+
+    .social-icon-wrapper svg {
+      width: 38px;
+      height: 38px;
+      color: #ffffff;
+      transition: transform 0.3s ease;
+    }
+
+    /* Platform title */
+    .title {
+      font-size: 24px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+      margin-bottom: 6px;
+    }
+
+    /* Metric / followers */
+    .followers-stat {
+      font-size: 14px;
+      color: #94a3b8;
+      font-weight: 400;
+      letter-spacing: 0.2px;
+    }
+
+    .followers-stat span {
+      color: #f1f5f9;
+      font-weight: 600;
+    }
+
+    /* Divider */
+    .divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.15), transparent);
+      width: 100%;
+      margin-bottom: 14px;
+    }
+
+    /* Bottom action button */
+    .content-bottom {
+      width: 100%;
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 12px 18px;
+      min-height: 46px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+      touch-action: manipulation;
+    }
+
+    .action-btn::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.18),
+        transparent
+      );
+      transition: left 0.6s ease;
+    }
+
+    .action-btn:hover::before {
+      left: 100%;
+    }
+
+    .action-btn:hover {
+      background: var(--electric-border-color);
+      border-color: var(--electric-light-color);
+      box-shadow: 0 0 22px var(--gradient-color);
+      transform: translateY(-2px);
+      color: #ffffff;
+    }
+
+    .action-btn i {
+      font-size: 13px;
+      transform: rotate(-45deg);
+      transition: transform 0.3s ease;
+    }
+
+    .action-btn:hover i {
+      transform: rotate(0deg);
+    }
+
+    /* Brand colors */
+    .card-instagram {
+      --electric-border-color: #e1306c;
+      --electric-light-color: #ff6090;
+      --electric-glow-1: rgba(255, 77, 128, 0.6);
+      --gradient-color: rgba(225, 48, 108, 0.35);
+      --border-outer-color: rgba(225, 48, 108, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #e1306c, transparent 45%, #833ab4);
+    }
+    .card-instagram .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(225, 48, 108, 0.25), transparent 70%);
+    }
+
+    .card-github {
+      --electric-border-color: #f59e0b;
+      --electric-light-color: #fbbf24;
+      --electric-glow-1: rgba(245, 158, 11, 0.65);
+      --gradient-color: rgba(245, 158, 11, 0.3);
+      --border-outer-color: rgba(245, 158, 11, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #f59e0b, transparent 45%, #d97706);
+    }
+    .card-github .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(245, 158, 11, 0.25), transparent 70%);
+    }
+
+    .card-linkedin {
+      --electric-border-color: #0284c7;
+      --electric-light-color: #38bdf8;
+      --electric-glow-1: rgba(2, 132, 199, 0.65);
+      --gradient-color: rgba(2, 132, 199, 0.3);
+      --border-outer-color: rgba(2, 132, 199, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #0284c7, transparent 45%, #0a66c2);
+    }
+    .card-linkedin .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(2, 132, 199, 0.25), transparent 70%);
+    }
+
+    .card-twitter {
+      --electric-border-color: #38bdf8;
+      --electric-light-color: #7dd3fc;
+      --electric-glow-1: rgba(56, 189, 248, 0.65);
+      --gradient-color: rgba(56, 189, 248, 0.3);
+      --border-outer-color: rgba(56, 189, 248, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #38bdf8, transparent 45%, #0284c7);
+    }
+    .card-twitter .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.25), transparent 70%);
+    }
+
+    .card-youtube {
+      --electric-border-color: #ff0033;
+      --electric-light-color: #ff4d6d;
+      --electric-glow-1: rgba(255, 0, 51, 0.65);
+      --gradient-color: rgba(255, 0, 51, 0.35);
+      --border-outer-color: rgba(255, 0, 51, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #ff0033, transparent 45%, #c00);
+    }
+    .card-youtube .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(255, 0, 51, 0.25), transparent 70%);
+    }
+
+    .card-whatsapp {
+      --electric-border-color: #25d366;
+      --electric-light-color: #4ade80;
+      --electric-glow-1: rgba(37, 211, 102, 0.65);
+      --gradient-color: rgba(37, 211, 102, 0.3);
+      --border-outer-color: rgba(37, 211, 102, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #25d366, transparent 45%, #128c7e);
+    }
+    .card-whatsapp .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(37, 211, 102, 0.25), transparent 70%);
+    }
+
+    .card-facebook {
+      --electric-border-color: #1877f2;
+      --electric-light-color: #60a5fa;
+      --electric-glow-1: rgba(24, 119, 242, 0.65);
+      --gradient-color: rgba(24, 119, 242, 0.3);
+      --border-outer-color: rgba(24, 119, 242, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #1877f2, transparent 45%, #0d55b5);
+    }
+    .card-facebook .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(24, 119, 242, 0.25), transparent 70%);
+    }
+
+    .card-reddit {
+      --electric-border-color: #ff4500;
+      --electric-light-color: #fb923c;
+      --electric-glow-1: rgba(255, 69, 0, 0.65);
+      --gradient-color: rgba(255, 69, 0, 0.35);
+      --border-outer-color: rgba(255, 69, 0, 0.45);
+      --background-glow-gradient: linear-gradient(-30deg, #ff4500, transparent 45%, #c43100);
+    }
+    .card-reddit .social-icon-wrapper {
+      background: radial-gradient(circle at 30% 30%, rgba(255, 69, 0, 0.25), transparent 70%);
+    }
+
+    /* Responsive grid */
+    @media (min-width: 1300px) {
+      .cards-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 1299px) and (min-width: 960px) {
+      .cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+      }
+    }
+
+    @media (max-width: 959px) and (min-width: 620px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+      .inner-container {
+        height: 430px;
+      }
+    }
+
+    @media (max-width: 619px) {
+      body {
+        padding: 40px 1rem 3rem;
+      }
+      .banner-header {
+        margin-bottom: 28px;
+      }
+      .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 6px 0;
+      }
+      .card-container {
+        max-width: 340px;
+        margin: 0 auto;
+      }
+      .inner-container {
+        height: 420px;
+      }
+      .content-container {
+        padding: 24px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ANIMATED SVG TURBULENCE DISPLACEMENT FILTER -->
+  <svg class="svg-container" aria-hidden="true">
+    <defs>
+      <filter id="turbulent-displace" color-interpolation-filters="sRGB" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="4" result="noise1" seed="1" />
+        <feOffset in="noise1" dx="0" dy="0" result="offsetNoise1">
+          <animate attributeName="dy" values="700; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+        </feOffset>
+
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="4" result="noise2" seed="1" />
+        <feOffset in="noise2" dx="0" dy="0" result="offsetNoise2">
+          <animate attributeName="dy" values="0; -700" dur="6s" repeatCount="indefinite" calcMode="linear" />
+        </feOffset>
+
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="4" result="noise1" seed="2" />
+        <feOffset in="noise1" dx="0" dy="0" result="offsetNoise3">
+          <animate attributeName="dx" values="490; 0" dur="6s" repeatCount="indefinite" calcMode="linear" />
+        </feOffset>
+
+        <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="4" result="noise2" seed="2" />
+        <feOffset in="noise2" dx="0" dy="0" result="offsetNoise4">
+          <animate attributeName="dx" values="0; -490" dur="6s" repeatCount="indefinite" calcMode="linear" />
+        </feOffset>
+
+        <feComposite in="offsetNoise1" in2="offsetNoise2" result="part1" />
+        <feComposite in="offsetNoise3" in2="offsetNoise4" result="part2" />
+        <feBlend in="part1" in2="part2" mode="color-dodge" result="combinedNoise" />
+
+        <feDisplacementMap in="SourceGraphic" in2="combinedNoise" scale="30" xChannelSelector="R" yChannelSelector="B" />
+      </filter>
+    </defs>
+  </svg>
+
+  <!-- Banner Header -->
+  <header class="banner-header">
+    <div class="banner-badge">
+      <span class="pulse-dot"></span>
+      <span>Live Electric Pulse</span>
+    </div>
+    <h1 class="banner-title">Social Connect</h1>
+    <p class="banner-subtitle">All official social networks electrified with real-time plasma turbulence borders</p>
+  </header>
+
+  <!-- Cards Grid Container (All 8 Platforms) -->
+  <main class="cards-grid">
+
+    <!-- Card 1: Instagram -->
+    <div class="card-container card-instagram">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </div>
+          <h2 class="title">Instagram</h2>
+          <p class="followers-stat">Followers : <span>625k</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://www.instagram.com/ishantk_is?igsh=MW1oMTBreWZnemNpdA==" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Follow me</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: GitHub -->
+    <div class="card-container card-github">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+            </svg>
+          </div>
+          <h2 class="title">Github</h2>
+          <p class="followers-stat">Followers : <span>150k</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://github.com/Ishantkohli" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Follow me</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3: LinkedIn -->
+    <div class="card-container card-linkedin">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+          </div>
+          <h2 class="title">Linkedin</h2>
+          <p class="followers-stat">Connection : <span>100k</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://www.linkedin.com/in/ishant-kohli-292485381?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Connect</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4: X / Twitter -->
+    <div class="card-container card-twitter">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </div>
+          <h2 class="title">X / Twitter</h2>
+          <p class="followers-stat">Followers : <span>45k</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://x.com/Ishant_Kohli_Dv?t=ZWJ5X3lQ7sXQfz5cyqilGw&s=09" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Follow me</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: YouTube -->
+    <div class="card-container card-youtube">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </div>
+          <h2 class="title">YouTube</h2>
+          <p class="followers-stat">Subscribers : <span>85k</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Subscribe</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 6: WhatsApp -->
+    <div class="card-container card-whatsapp">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.031 0C5.395 0 0 5.394 0 12.03c0 2.118.553 4.187 1.603 6.009L.065 24l6.126-1.607a12.01 12.01 0 0 0 5.84 1.5c6.634 0 12.029-5.394 12.029-12.03A12.032 12.032 0 0 0 12.031 0zm0 21.86c-1.879 0-3.719-.506-5.321-1.463l-.382-.227-3.955 1.037 1.056-3.856-.249-.396a9.98 9.98 0 0 1-1.534-5.267c0-5.508 4.482-9.99 9.993-9.99a9.96 9.96 0 0 1 7.07 2.929 9.96 9.96 0 0 1 2.924 7.062c0 5.509-4.482 9.99-9.993 9.99zm5.48-7.48c-.3-.15-1.776-.876-2.05-.976-.276-.101-.476-.15-.676.15-.2.3-.775.976-.95 1.176-.176.2-.351.226-.651.076-.3-.15-1.268-.467-2.416-1.491-.893-.797-1.496-1.782-1.671-2.082-.176-.3-.019-.462.131-.612.136-.135.3-.35.45-.526.15-.175.2-.3.3-.5.1-.2.05-.375-.025-.525-.075-.15-.676-1.63-.926-2.232-.243-.587-.49-.507-.676-.517-.175-.01-.375-.01-.575-.01-.2 0-.526.075-.801.375-.276.3-1.052 1.028-1.052 2.507 0 1.48 1.077 2.908 1.227 3.109.15.2 2.119 3.235 5.134 4.537.717.31 1.277.495 1.713.633.72.229 1.376.196 1.895.119.578-.086 1.776-.726 2.026-1.427.25-.701.25-1.302.175-1.427-.075-.125-.275-.2-.575-.35z"/>
+            </svg>
+          </div>
+          <h2 class="title">WhatsApp</h2>
+          <p class="followers-stat">Direct Chat : <span>Active</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://wa.me/qr/73CGX6ZNDLTLK1" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Chat now</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 7: Facebook -->
+    <div class="card-container card-facebook">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </div>
+          <h2 class="title">Facebook</h2>
+          <p class="followers-stat">Followers : <span>50k</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://www.facebook.com/share/1AgpiNawhd/" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Follow me</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 8: Reddit -->
+    <div class="card-container card-reddit">
+      <div class="inner-container">
+        <div class="border-outer">
+          <div class="main-card"></div>
+        </div>
+        <div class="glow-layer-1"></div>
+        <div class="glow-layer-2"></div>
+      </div>
+
+      <div class="overlay-1"></div>
+      <div class="overlay-2"></div>
+      <div class="background-glow"></div>
+
+      <div class="content-container">
+        <div class="content-top">
+          <div class="scrollbar-glass">Animated</div>
+          <div class="electric-tag"><i class="fa-solid fa-bolt"></i> 240V</div>
+        </div>
+
+        <div class="content-center">
+          <div class="social-icon-wrapper">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.56 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.702zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+            </svg>
+          </div>
+          <h2 class="title">Reddit</h2>
+          <p class="followers-stat">Karma : <span>25k</span></p>
+        </div>
+
+        <div class="content-bottom">
+          <hr class="divider" />
+          <a href="https://www.reddit.com/u/Ishant_k/s/eWeBI89LRu" target="_blank" rel="noopener noreferrer" class="action-btn">
+            <i class="fa-solid fa-link"></i>
+            <span>Join community</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+</body>
+</html>
