@@ -41,7 +41,8 @@ optionImages.forEach((image, index) => {
     setTimeout(() => {
       gameContainer.classList.remove("start");
 
-      let imageSrc = e.target.querySelector("img").src;
+      let imgEl = image.querySelector("img");
+      let imageSrc = imgEl ? imgEl.src : "";
 
       if (mode === "pvp") {
         handlePVP(index, imageSrc);
